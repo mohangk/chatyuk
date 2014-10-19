@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Strophe.js Basic Example</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src='strophe.js'></script>
+    <script src='strophe.muc.js'></script>
+    <script src='muc.js'></script>
+  </head>
+  <body>
+    <div id='login' style='text-align: center'>
+      <form name='cred'>
+        <label for='jid'>JID:</label>
+        <input type='text' id='jid' value="mohan2@chatyuk.com">
+        <label for='pass'>Password:</label>
+        <input type='password' id='pass' value="test">
+        <input type='button' id='connect' value='connect'>
+      </form>
+    </div>
+    <hr>
+    <div id='chat-window'>
+      <ul id='message-pane'>
+      </ul>
+    </div>
+    <div id='message-form'>
+      <input id="message" name="message" type="text" disabled=true>
+    </div>
+  </body>
+</html>
