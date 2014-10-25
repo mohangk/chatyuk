@@ -1,15 +1,22 @@
 //TODO
-// Join a room (done)
-// Show room messages - from who, actual message (done)
-// Send a message
+// Anonymous logins
+// Display roster 
 // Presence (when people join or leave)
+// Prebinding
+//--
+// Join a room, creating one if it does not already exist (done)
+// Show room messages - from who, actual message (done)
+// Send a message (done)
 
-var BOSH_SERVICE = 'http://chatyuk.com:5280/http-bind'
+var CHAT_SERVER = 'chatyuk.com'
+var CONFERENCE_SERVER = 'conference.chatyuk.com'
+var BOSH_SERVICE = 'http://'+CHAT_SERVER+':5280/http-bind'
 var connection = null;
 
 function log()
 {
   console.log('IN CB', arguments)
+  return true;
 }
 
 function onMessage(message, room)
@@ -51,8 +58,24 @@ function onConnect(status)
   } else if (status == Strophe.Status.CONNECTED) {
     console.log('Strophe is connected.');
     $('#message').attr('disabled', false);
-    connection.muc.join('test2@conference.chatyuk.com','mohan2', onMessage, log, log);
+    connection.muc.join(room(), username(), onMessage, log, log);
   }
+}
+
+function room() {
+   return $('#room').val()+'@'+CONFERENCE_SERVER;
+}
+
+function username() {
+  return $('#username').val();
+}
+
+function jid() {
+  return username()+'@'+CHAT_SERVER;
+}
+
+function password() {
+  return $('#pass').val();
 }
 
 $(document).ready(function () {
@@ -65,8 +88,8 @@ $(document).ready(function () {
     if (button.value == 'connect') {
       button.value = 'disconnect';
 
-      connection.connect($('#jid').get(0).value,
-                         $('#pass').get(0).value,
+      connection.connect(jid(),
+                         password(),
                          onConnect);
     } else {
       button.value = 'connect';
@@ -77,7 +100,7 @@ $(document).ready(function () {
   $(document).on( 'keypress', '#message', function(event) {
     if ( event.which == 13 ) {
       event.preventDefault();
-      connection.muc.groupchat('test2@conference.chatyuk.com',this.value);
+      connection.muc.groupchat(room(),this.value);
       this.value = '';
     }
   });
