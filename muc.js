@@ -71,7 +71,12 @@ function username() {
 }
 
 function jid() {
-  return username()+'@'+CHAT_SERVER;
+  //if password is blank we assume this is an anonymous login
+  if(password() == '') {
+    return CHAT_SERVER;
+  } else {
+    return username()+'@'+CHAT_SERVER;
+  }
 }
 
 function password() {
