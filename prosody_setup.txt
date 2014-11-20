@@ -1,0 +1,23 @@
+Setup of Vagrant
+
+1. In /etc/apt/sources.list
+
+a. Change to kambing
+b. add deb http://packages.prosody.im/debian trusty main
+
+2. Vagrantfile 
+
+a. Open up BOSH ports 
+
+3. Prosody config change
+
+
+Setup on Host
+
+
+Considerations
+
+1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
+2. We need to try HTTPS for all comms
+3.We should use websockets if the browser supports it with a fallback to BOSH
+
