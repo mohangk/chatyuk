@@ -4,29 +4,55 @@
  * - Chatbox
  *  - MessagePane
  *  - MassageForm
- * - LoginForm
+ * - Avatar
+ *   - LoginForm/LoggedInBox
  */
 
-var  LoginForm = React.createClass({
-  handleSubmit: function(e) {
-    console.log('I have been submitted',e);
-  },
+var LoggedInBox = React.createClass({
   render: function() {
     return (
-      <form name='cred' onSubmit={this.handleSubmit}>
-        <label htmlFor='username'>Username:</label>
-        <input type='text' id='username' defaultValue={this.props.username}/>
-        <label htmlFor='pass'>Password:</label>
-        <input type='password' id='pass' defaultValue=""/>
-        <label htmlFor='room'>Room:</label>
-        <input type='text' id='room' defaultValue={this.props.room}/>
-        <input type='button' id='connect' value='connect'/>
-      </form>
+      <span> Logged in as {this.props.username} in {this.props.room} </span>
     );
   }
 });
 
+var LoginForm = React.createClass({
+  doLogin: function(e) {
+    e.preventDefault();
+    var username = this.refs.username.getDOMNode().value.trim();
+    var room = this.refs.room.getDOMNode().value.trim();
+    this.props.loggedInAs(username, room)
+  },
+  render: function() {
+      return (<form  onSubmit={this.doLogin}>
+        <label htmlFor='username'>Username:</label>
+        <input type='text' ref='username' defaultValue={this.props.username}/>
+        <label htmlFor='room'>Room:</label>
+        <input type='text' ref='room' defaultValue={this.props.room}/>
+        <input type='submit' value='Join!'/>
+      </form> )
+  }
+});
+
+var Avatar = React.createClass({
+  getInitialState: function() {
+	  return {loggedIn: false};
+  },
+
+  loggedInAs: function(username, room) {
+    this.setState({loggedIn: true, username: username, room: room})
+  },
+
+  render: function() {
+    if(this.state.loggedIn) {
+     return ( <LoggedInBox username={this.state.username} room={this.state.room} /> )
+    } else {
+     return ( <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" /> )
+    }
+  }
+});
+
 React.render(
-  <LoginForm username="test" room="testroom" />,
+  <Avatar  />,
   document.getElementById('content')
 );
