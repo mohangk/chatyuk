@@ -5,6 +5,7 @@
   </head>
   <body>
     <script src="../scripts/comms.js"></script>
+    <script src="mini_spec.js"></script>
     <script type="text/javascript">
       //Strophe stub
       Strophe = { boshService: null };
@@ -15,11 +16,18 @@
                  },
       }
     </script>
+
     <script type="text/javascript">
-      var it_can_be_initialized = function (){
+      it('can be initialized', function (){
         var comms1 = Object.create(XmppComms);
         comms1.connect('fakeuser', 'fakepass', 'fakeroom');
-      }();
+        assert(comms1.username, 'fakeuser');
+        assert(comms1.password, 'fakepass');
+        assert(comms1.room, 'fakeroom');
+        assert(comms1.roomAndServer, 'fakeroom@'+XmppComms.CONFERENCE_SERVER);
+      });
+
     </script>
+    <div id="test-content"></div>
   </body>
 </html>

@@ -27,9 +27,9 @@ var XmppComms = {
 
     this.username = username;
     this.password = password;
-    this.room = this.roomDefinition(room);
+    this.room = room;
+    this.roomAndServer = this.roomDefinition(room);
 
-    debugger;
     success = this.connection.connect(this.jid(),
                        this.password,
                        this.onConnect);
