@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comms spec</title>
+  </head>
+  <body>
+    <script src="../scripts/comms.js"></script>
+    <script type="text/javascript">
+      //Strophe stub
+      Strophe = { boshService: null };
+      Strophe.Connection = function( boshService ) { this.boshService = boshService};
+      Strophe.Connection.prototype = {
+        connect: function (jid, password, onConnectCb) { 
+                   return true
+                 },
+      }
+    </script>
+    <script type="text/javascript">
+      var it_can_be_initialized = function (){
+        var comms1 = Object.create(XmppComms);
+        comms1.connect('fakeuser', 'fakepass', 'fakeroom');
+      }();
+    </script>
+  </body>
+</html>

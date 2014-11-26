@@ -12,35 +12,36 @@
 
 var XmppComms = {
   
-  var CHAT_SERVER = 'chatyuk.com'
-  var CONFERENCE_SERVER = 'conference.chatyuk.com'
-  var BOSH_SERVICE = 'http://'+CHAT_SERVER+':5280/http-bind'
-  var connection = null;
-  var username = null;
-  var password = null;
-  var room = null;
+  CHAT_SERVER:  'chatyuk.com',
+  CONFERENCE_SERVER:  'conference.chatyuk.com',
+  BOSH_SERVICE: 'http://'+this.CHAT_SERVER+':5280/http-bind',
+  connection: null,
+  username: null,
+  password: null,
+  room: null,
 
-  function connect(username, password, room) {
-    this.connection = new Strophe.Connection(BOSH_SERVICE);
-    this.connection.rawInput = rawInput;
-    this.connection.rawOutput = rawOutput;
+  connect: function(username, password, room) {
+    this.connection = new Strophe.Connection(this.BOSH_SERVICE);
+    this.connection.rawInput = this.rawInput;
+    this.connection.rawOutput = this.rawOutput;
 
     this.username = username;
     this.password = password;
     this.room = this.roomDefinition(room);
 
-    success = connection.connect(jid(),
-                       password(),
-                       onConnect);
+    debugger;
+    success = this.connection.connect(this.jid(),
+                       this.password,
+                       this.onConnect);
     if(!success) {
-      connection.disconnect();
+      this.connection.disconnect();
       return false;
     } else {
       return true;
     }
-  }
+  },
 
-  function onMessage(message, room) {
+  onMessage: function(message, room) {
     var $message = $(message),
         body = $message.children('body').text(),
         jid = $message.attr('from'),
@@ -51,17 +52,17 @@ var XmppComms = {
         // UI $('#message-pane').append('<li>'+sender+':'+body+'</li>')
         console.log('messagecallback', message);
     return true;
-  }
+  },
 
-  function rawInput(data) {
+  rawInput: function(data) {
       console.log('RECV: ',data);
-  }
+  },
 
-  function rawOutput(data) {
+  rawOutput: function(data) {
       console.log('SENT: ',data);
-  }
+  },
 
-  function onConnect(status) {
+  onConnect: function(status) {
     if (status == Strophe.Status.CONNECTING) {
       console.log('Strophe is connecting.');
     } else if (status == Strophe.Status.CONNFAIL) {
@@ -77,19 +78,18 @@ var XmppComms = {
       //UI $('#message').attr('disabled', false);
       connection.muc.join(room(), username(), onMessage, log, log);
     }
-  }
+  },
 
-  function jid() {
+  jid: function() {
     //if password is blank we assume this is an anonymous login
     if(this.password == '') {
-      return CHAT_SERVER;
+      return this.CHAT_SERVER;
     } else {
-      return this.username+'@'+CHAT_SERVER;
+      return this.username+'@'+this.CHAT_SERVER;
     }
-  }
+  },
 
-  function roomDefinition(room) {
-    return this.room+'@'+CONFERENCE_SERVER;
-  }
-
+  roomDefinition: function(room) {
+    return this.room+'@'+this.CONFERENCE_SERVER;
+  },
 }
