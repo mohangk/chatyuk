@@ -1,15 +1,21 @@
 Setup of Vagrant
 
-1. In /etc/apt/sources.list
+1. In /etc/apt/sources.list - change to kambing.ui.ac.id
 
-a. Change to kambing
-b. add deb http://packages.prosody.im/debian trusty main
+2. add deb repo for latest prosody
 
-2. Vagrantfile 
+echo deb http://packages.prosody.im/debian $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list
+wget https://prosody.im/files/prosody-debian-packages.key -O- | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install prosody
+
+3. Vagrantfile 
 
 a. Open up BOSH ports 
 
-3. Prosody config change
+4. Prosody config change
+
+Copy config from repo
 
 
 Setup on Host
