@@ -11,24 +11,28 @@
 // Anonymous logins(done)
 
 var XmppComms = {
-  
+
   CHAT_SERVER:  'chatyuk.com',
   CONFERENCE_SERVER:  'conference.chatyuk.com',
-  BOSH_SERVICE: 'http://'+this.CHAT_SERVER+':5280/http-bind',
   connection: null,
   username: null,
   password: null,
   room: null,
+  currentStatus: null,
+
+  boshServiceUrl: function() {
+    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
+  },
 
   connect: function(username, password, room) {
-    this.connection = new Strophe.Connection(this.BOSH_SERVICE);
+
+    this.connection = new Strophe.Connection(this.boshServiceUrl());
     this.connection.rawInput = this.rawInput;
     this.connection.rawOutput = this.rawOutput;
 
     this.username = username;
     this.password = password;
     this.room = room;
-    this.roomAndServer = this.roomDefinition(room);
 
     success = this.connection.connect(this.jid(),
                        this.password,
@@ -63,6 +67,7 @@ var XmppComms = {
   },
 
   onConnect: function(status) {
+    this.currentStatus =  status;
     if (status == Strophe.Status.CONNECTING) {
       console.log('Strophe is connecting.');
     } else if (status == Strophe.Status.CONNFAIL) {
@@ -76,7 +81,7 @@ var XmppComms = {
     } else if (status == Strophe.Status.CONNECTED) {
       console.log('Strophe is connected.');
       //UI $('#message').attr('disabled', false);
-      connection.muc.join(room(), username(), onMessage, log, log);
+      connection.muc.join(roomAndServer(), username(), onMessage, log, log);
     }
   },
 
@@ -89,7 +94,7 @@ var XmppComms = {
     }
   },
 
-  roomDefinition: function(room) {
+  roomAndServer: function() {
     return this.room+'@'+this.CONFERENCE_SERVER;
   },
 }
