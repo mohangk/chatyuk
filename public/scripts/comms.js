@@ -19,30 +19,51 @@ var XmppComms = {
   password: null,
   room: null,
   currentStatus: null,
+  onConnectedCb: null,
+  onDisconnectedCb: null,
+  onMessageCb: null,
 
   boshServiceUrl: function() {
     return 'http://'+this.CHAT_SERVER+':5280/http-bind';
   },
 
-  connect: function(username, password, room) {
+  connect: function(username, password, room, onConnectedCb, onDisconnectedCb, onMessageCb) {
 
-    this.connection = new Strophe.Connection(this.boshServiceUrl());
-    this.connection.rawInput = this.rawInput;
-    this.connection.rawOutput = this.rawOutput;
+    if (this.connection === null) {
+      this.connection = new Strophe.Connection(this.boshServiceUrl());
+      console.log('CREATE connection');
+      this.connection.rawInput = this.rawInput;
+      this.connection.rawOutput = this.rawOutput;
+    } else {
+      this.connection.reset();
+      console.log('REUSE connection');
+      debugger;
+    }
+
 
     this.username = username;
     this.password = password;
     this.room = room;
+    this.onConnectedCb = onConnectedCb;
+    this.onDisconnectedCb = onDisconnectedCb;
+    this.onMessageCb = onMessageCb;
 
-    success = this.connection.connect(this.jid(),
+    this.connection.connect(this.jid(),
                        this.password,
-                       this.onConnect);
-    if(!success) {
-      this.connection.disconnect();
-      return false;
-    } else {
-      return true;
-    }
+                       this.onConnect.bind(this));
+  },
+
+  disconnect: function() {
+    this.connection.disconnect();
+    // this.onConnectedCb = null;
+    // this.onDisconnectedCb = null;
+    // this.onMessageCb = null;
+  },
+
+  log: function()
+  {
+    console.log('IN CB', arguments)
+    return true;
   },
 
   onMessage: function(message, room) {
@@ -53,8 +74,8 @@ var XmppComms = {
         sender = resource && Strophe.unescapeNode(resource) || '',
         delayed = $message.find('delay').length > 0,
         subject = $message.children('subject').text();
-        // UI $('#message-pane').append('<li>'+sender+':'+body+'</li>')
         console.log('messagecallback', message);
+    this.onMessageCb({ body: body, sender: sender });
     return true;
   },
 
@@ -72,16 +93,17 @@ var XmppComms = {
       console.log('Strophe is connecting.');
     } else if (status == Strophe.Status.CONNFAIL) {
       console.log('Strophe failed to connect.');
-      // UI $('#connect').get(0).value = 'connect';
+      this.onDisconnectedCb();
     } else if (status == Strophe.Status.DISCONNECTING) {
       console.log('Strophe is disconnecting.');
     } else if (status == Strophe.Status.DISCONNECTED) {
       console.log('Strophe is disconnected.');
-      //UI $('#connect').get(0).value = 'connect';
+      console.log('disc cb -', this.onDisconnectedCb);
+      this.onDisconnectedCb();
     } else if (status == Strophe.Status.CONNECTED) {
       console.log('Strophe is connected.');
-      //UI $('#message').attr('disabled', false);
-      connection.muc.join(roomAndServer(), username(), onMessage, log, log);
+      this.onConnectedCb();
+      this.connection.muc.join(this.roomAndServer(), this.username, this.onMessage.bind(this), this.log, this.log);
     }
   },
 
@@ -97,4 +119,13 @@ var XmppComms = {
   roomAndServer: function() {
     return this.room+'@'+this.CONFERENCE_SERVER;
   },
+
+  isConnected: function() {
+    return (this.currentStatus == Strophe.Status.CONNECTED);
+  },
+
+  groupchat: function(message) {
+    this.connection.muc.groupchat(this.roomAndServer(), message);
+  }
+
 }

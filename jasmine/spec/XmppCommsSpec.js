@@ -1,8 +1,5 @@
 describe("XmppComms", function() {
 
-  beforeEach(function() {
-  });
-
   describe('#connect', function() {
 
     it("sets the username, password, rooom", function() {
@@ -30,7 +27,7 @@ describe("XmppComms", function() {
 
   });
 
-  describe('#roomDefinition', function() {
+  describe('#roomAndServer', function() {
     it('combines generates the room JID',function() {
       var comms = Object.create(XmppComms);
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
@@ -38,19 +35,63 @@ describe("XmppComms", function() {
     })
   });
 
-  describe('#onConnect', function() {
-    it('currentStatus is null by default',function() {
+  describe('currentStatus', function() {
+    it('is null by default',function() {
       var comms = Object.create(XmppComms);
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.currentStatus).toBe(null);
-      // comms.onConnect(Strophe.Strophe.CONNECTED);
     })
+  });
+
+  describe('#isConnected', function(){
+    describe('when currentStatus is CONNECTED', function() {
+      it('returns true', function() {
+        var comms = Object.create(XmppComms);
+        comms.connect('fakeuser', 'fakepass', 'fakeroom');
+        comms.onConnect(Strophe.Status.CONNECTED);
+        expect(comms.isConnected()).toBe(true);
+      });
+    });
+
+    describe('for all other states', function() {
+      it('returns false', function() {
+        var comms = Object.create(XmppComms);
+        comms.connect('fakeuser', 'fakepass', 'fakeroom');
+        expect(comms.isConnected()).toBe(false);
+        comms.onConnect(Strophe.Status.CONNECTING);
+        expect(comms.isConnected()).toBe(false);
+        comms.onConnect(Strophe.Status.DISCONNECTED);
+        expect(comms.isConnected()).toBe(false);
+      });
+    });
+  });
+
+  describe('#onConnect', function() {
+    var comms;
+
+    beforeEach(function(){
+      comms = Object.create(XmppComms);
+      comms.connect('fakeuser', 'fakepass', 'fakeroom');
+    });
 
     it('sets the currentStatus',function() {
-      var comms = Object.create(XmppComms);
-      comms.connect('fakeuser', 'fakepass', 'fakeroom');
       comms.onConnect(Strophe.Status.CONNECTING);
       expect(comms.currentStatus).toBe(Strophe.Status.CONNECTING);
+      comms.onConnect(Strophe.Status.DISCONNECTED);
+      expect(comms.currentStatus).toBe(Strophe.Status.DISCONNECTED);
     })
+
+    describe('when status is CONNECTED',function() {
+      it('joins the specified room', function() {
+        mucSpy = spyOn(comms.connection.muc,'join');
+        comms.onConnect(Strophe.Status.CONNECTED);
+        expect(mucSpy).toHaveBeenCalledWith(comms.roomAndServer(),
+                                            comms.username,
+                                            comms.onMessage,
+                                            console.log,
+                                            console.log
+                                           );
+      });
+    });
   });
 });

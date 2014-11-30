@@ -1,3 +1,22 @@
+StropheMuc = function() {
+  this.room = null;
+  this.nick = null;
+  this.onMessageCb = null;
+  this.onPresenceCb = null;
+  this.onRosterCb = null;
+};
+
+StropheMuc.prototype = {
+
+  join: function(room, nick, onMessageCb, onPresenceCb, onRosterCb) {
+    this.room = room;
+    this.nick = nick;
+    this.onMessageCb = onMessageCb;
+    this.onPresenceCb = onPresenceCb;
+    this.onRosterCb = onRosterCb;
+  }
+}
+
 Strophe = { boshService: null };
 
 Strophe.Status = {
@@ -8,8 +27,13 @@ Strophe.Status = {
   CONNECTED: 4
 }
 
-Strophe.Connection = function( boshService ) { this.boshService = boshService};
+Strophe.Connection = function( boshService ) { 
+  this.boshService = boshService;
+  this.muc = new StropheMuc();
+};
+
 Strophe.Connection.prototype = {
+
   connect: function (jid, password, onConnectCb) { 
              this.jid = jid;
              this.password = password;

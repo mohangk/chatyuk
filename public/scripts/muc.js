@@ -10,104 +10,69 @@
 // Send a message (done)
 // Anonymous logins(done)
 
-var CHAT_SERVER = 'chatyuk.com'
-var CONFERENCE_SERVER = 'conference.chatyuk.com'
-var BOSH_SERVICE = 'http://'+CHAT_SERVER+':5280/http-bind'
-var connection = null;
-
-function log()
+function addMessage(message)
 {
-  console.log('IN CB', arguments)
-  return true;
-}
-
-function onMessage(message, room)
-{
-  var $message = $(message),
-      body = $message.children('body').text(),
-      jid = $message.attr('from'),
-      resource = Strophe.getResourceFromJid(jid),
-      sender = resource && Strophe.unescapeNode(resource) || '',
-      delayed = $message.find('delay').length > 0,
-      subject = $message.children('subject').text();
-  $('#message-pane').append('<li>'+sender+':'+body+'</li>')
+  $('#message-pane').append('<li>'+message.sender+':'+message.body+'</li>')
   console.log('messagecallback', message);
-  return true;
 }
 
-function rawInput(data)
-{
-    console.log('RECV: ',data);
+function enableMessageBox() {
+  $('#message').attr('disabled', false);
 }
 
-function rawOutput(data)
-{
-    console.log('SENT: ',data);
+function disableMessageBox() {
+  $('#message').attr('disabled', true);
 }
 
-function onConnect(status)
-{
-  if (status == Strophe.Status.CONNECTING) {
-    console.log('Strophe is connecting.');
-  } else if (status == Strophe.Status.CONNFAIL) {
-    console.log('Strophe failed to connect.');
-    $('#connect').get(0).value = 'connect';
-  } else if (status == Strophe.Status.DISCONNECTING) {
-    console.log('Strophe is disconnecting.');
-  } else if (status == Strophe.Status.DISCONNECTED) {
-    console.log('Strophe is disconnected.');
-    $('#connect').get(0).value = 'connect';
-  } else if (status == Strophe.Status.CONNECTED) {
-    console.log('Strophe is connected.');
-    $('#message').attr('disabled', false);
-    connection.muc.join(room(), username(), onMessage, log, log);
-  }
+function setButtonAsConnect() {
+  var button = $('#connect').get(0);
+  button.value = 'connect';
+}
+
+function setButtonAsDisconnect() {
+  var button = $('#connect').get(0);
+  button.value = 'disconnect';
+}
+
+function connected() {
+  setButtonAsDisconnect();
+  enableMessageBox();
+}
+
+function disconnected() {
+  setButtonAsConnect();
+  disableMessageBox();
 }
 
 function room() {
-   return $('#room').val()+'@'+CONFERENCE_SERVER;
+   return $('#room').val();
 }
 
 function username() {
   return $('#username').val();
 }
 
-function jid() {
-  //if password is blank we assume this is an anonymous login
-  if(password() == '') {
-    return CHAT_SERVER;
-  } else {
-    return username()+'@'+CHAT_SERVER;
-  }
-}
-
 function password() {
   return $('#pass').val();
 }
 
+
+var comms = null;
 $(document).ready(function () {
-  connection = new Strophe.Connection(BOSH_SERVICE);
-  connection.rawInput = rawInput;
-  connection.rawOutput = rawOutput;
+  comms = Object.create(XmppComms);
 
   $('#connect').bind('click', function () {
-    var button = $('#connect').get(0);
-    if (button.value == 'connect') {
-      button.value = 'disconnect';
-
-      connection.connect(jid(),
-                         password(),
-                         onConnect);
+    if (!comms.isConnected()) {
+      comms.connect(username(), password(), room(), connected, disconnected, addMessage);
     } else {
-      button.value = 'connect';
-      connection.disconnect();
+      comms.disconnect();
     }
   });
 
   $(document).on( 'keypress', '#message', function(event) {
     if ( event.which == 13 ) {
       event.preventDefault();
-      connection.muc.groupchat(room(),this.value);
+      comms.groupchat(this.value);
       this.value = '';
     }
   });
