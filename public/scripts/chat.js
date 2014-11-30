@@ -11,7 +11,7 @@
 var LoggedInBox = React.createClass({
   render: function() {
     return (
-      <span> Logged in as {this.props.username} in {this.props.room} </span>
+      <span> Logged in as {this.props.username} in {this.props.room} <input type="button" value="Logout" /> </span>
     );
   }
 });
@@ -36,10 +36,15 @@ var LoginForm = React.createClass({
 
 var Avatar = React.createClass({
   getInitialState: function() {
-	  return {loggedIn: false};
+	  return {
+      loggedIn: this.props.comms.isConnected(),
+      username: this.props.comms.username,
+      room: this.props.comms.room
+    };
   },
 
   loggedInAs: function(username, room) {
+    this.props.comms.connect(username, '', room);
     this.setState({loggedIn: true, username: username, room: room})
   },
 
@@ -52,7 +57,9 @@ var Avatar = React.createClass({
   }
 });
 
+var comms = Object.create(XmppComms);
+
 React.render(
-  <Avatar  />,
+  <Avatar comms={comms} />,
   document.getElementById('content')
 );

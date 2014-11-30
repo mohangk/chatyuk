@@ -1,5 +1,4 @@
 //TODO
-// Super simple UI
 // Display roster
 // Presence (when people join or leave)
 // Prebinding
