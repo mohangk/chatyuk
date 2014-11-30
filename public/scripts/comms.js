@@ -31,13 +31,10 @@ var XmppComms = {
 
     if (this.connection === null) {
       this.connection = new Strophe.Connection(this.boshServiceUrl());
-      console.log('CREATE connection');
       this.connection.rawInput = this.rawInput;
       this.connection.rawOutput = this.rawOutput;
     } else {
       this.connection.reset();
-      console.log('REUSE connection');
-      debugger;
     }
 
 
@@ -54,10 +51,7 @@ var XmppComms = {
   },
 
   disconnect: function() {
-    this.connection.disconnect();
-    // this.onConnectedCb = null;
-    // this.onDisconnectedCb = null;
-    // this.onMessageCb = null;
+    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect() }.bind(this));
   },
 
   log: function()
@@ -74,7 +68,6 @@ var XmppComms = {
         sender = resource && Strophe.unescapeNode(resource) || '',
         delayed = $message.find('delay').length > 0,
         subject = $message.children('subject').text();
-        console.log('messagecallback', message);
     this.onMessageCb({ body: body, sender: sender });
     return true;
   },
@@ -98,7 +91,6 @@ var XmppComms = {
       console.log('Strophe is disconnecting.');
     } else if (status == Strophe.Status.DISCONNECTED) {
       console.log('Strophe is disconnected.');
-      console.log('disc cb -', this.onDisconnectedCb);
       this.onDisconnectedCb();
     } else if (status == Strophe.Status.CONNECTED) {
       console.log('Strophe is connected.');
