@@ -51,7 +51,7 @@ var XmppComms = {
   },
 
   disconnect: function() {
-    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect() }.bind(this));
+    this.connection.muc.leave(this.roomAndServer(), this.username, function() {console.log('disconnect callback is called'); this.connection.disconnect() }.bind(this));
   },
 
   log: function()

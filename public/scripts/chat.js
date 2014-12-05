@@ -11,7 +11,7 @@
 var LoggedInBox = React.createClass({
   render: function() {
     return (
-      <span> Logged in as {this.props.username} in {this.props.room} <input type="button" value="Logout" /> </span>
+      <span> Logged in as {this.props.username} in {this.props.room} <input type="button" value="Logout" onClick={this.props.logout} /> </span>
     );
   }
 });
@@ -44,13 +44,26 @@ var Avatar = React.createClass({
   },
 
   loggedInAs: function(username, room) {
-    this.props.comms.connect(username, '', room);
+    this.props.comms.connect(username, 
+                             '', 
+                             room,
+                             function(){alert('i just got connected')},
+                             function(){alert('i just got disconnected')},
+                             function(){alert('i just got message')}
+                            );
     this.setState({loggedIn: true, username: username, room: room})
+  },
+
+  logout: function() {
+    console.log('in avatar disconnect');
+    debugger;
+    this.props.comms.disconnect();
+    this.setState({loggedIn: false, username: null, room: null})
   },
 
   render: function() {
     if(this.state.loggedIn) {
-     return ( <LoggedInBox username={this.state.username} room={this.state.room} /> )
+     return ( <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} /> )
     } else {
      return ( <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" /> )
     }
