@@ -1,9 +1,24 @@
 /**
+ * TODO
+ *
+ * 1. Add some testing
+ * 2. Add some basic styling - look at converse.js 
+ *   - embed to an existing page
+ *   - must be able to fold and open
+ * 3. Display roster
+ * 4. Presence (when people join or leave)
+ * 5. Prebinding
+ *    -http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
+ *
  * Component strucutre is
  *
- * - Chatbox
- *  - MessagePane
- *  - MassageForm
+ *- Chatbox
+ * - ChatPane
+ *  - Message
+ *  - Message
+ *  - Message
+ *  - Message
+ * - MassageForm
  * - Avatar
  *   - LoginForm/LoggedInBox
  */
@@ -55,8 +70,6 @@ var Avatar = React.createClass({
   },
 
   logout: function() {
-    console.log('in avatar disconnect');
-    debugger;
     this.props.comms.disconnect();
     this.setState({loggedIn: false, username: null, room: null})
   },
@@ -70,9 +83,54 @@ var Avatar = React.createClass({
   }
 });
 
+var MessagePane = React.createClass({
+  getInitialState: function() {
+    var messages = []
+    if(this.props.messages !== 'undefined') {
+      messages = this.props.messages;
+    }
+	  return {
+      messages: messages
+    };
+  },
+
+  addMessage: function(message) {
+    var messages = this.state.messages;
+    messages.push(message);
+    this.setState({messages: messages});
+  },
+
+  render: function() {
+    var messageNodes = this.state.messages.map(function(message, index) {
+      return (
+        <Message sender={message.sender} body={message.body} key={index} />
+      );
+    });
+    return (
+      <ul className="message-pane">
+        {messageNodes}
+      </ul>
+    );
+  },
+
+});
+
+var Message = React.createClass({
+  render: function() {
+    return(
+      <li>{this.props.sender}:{this.props.body}</li>
+    );
+  }
+});
+
 var comms = Object.create(XmppComms);
 
 React.render(
   <Avatar comms={comms} />,
   document.getElementById('content')
+);
+
+React.render(
+  <MessagePane messages={[{sender: 'John', body: 'Message 1'}, {sender: 'Jesus', body: 'Message 2'}]} />,
+  document.getElementById('test-message-pane')
 );

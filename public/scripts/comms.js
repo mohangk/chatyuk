@@ -47,11 +47,11 @@ var XmppComms = {
 
     this.connection.connect(this.jid(),
                        this.password,
-                       this.onConnect.bind(this));
+                       this.onServerConnect.bind(this));
   },
 
   disconnect: function() {
-    this.connection.muc.leave(this.roomAndServer(), this.username, function() {console.log('disconnect callback is called'); this.connection.disconnect() }.bind(this));
+    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect() }.bind(this));
   },
 
   log: function()
@@ -80,21 +80,31 @@ var XmppComms = {
       console.log('SENT: ',data);
   },
 
-  onConnect: function(status) {
+  onServerConnect: function(status) {
     this.currentStatus =  status;
     if (status == Strophe.Status.CONNECTING) {
       console.log('Strophe is connecting.');
-    } else if (status == Strophe.Status.CONNFAIL) {
+    } 
+    else if (status == Strophe.Status.CONNFAIL) {
       console.log('Strophe failed to connect.');
-      this.onDisconnectedCb();
-    } else if (status == Strophe.Status.DISCONNECTING) {
+      if(typeof(this.onDisconnectedCb) != 'undefined') {
+        this.onDisconnectedCb();
+      }
+    } 
+    else if (status == Strophe.Status.DISCONNECTING) {
       console.log('Strophe is disconnecting.');
-    } else if (status == Strophe.Status.DISCONNECTED) {
+    } 
+    else if (status == Strophe.Status.DISCONNECTED) {
       console.log('Strophe is disconnected.');
-      this.onDisconnectedCb();
-    } else if (status == Strophe.Status.CONNECTED) {
+      if(typeof(this.onDisconnectedCb) != 'undefined') {
+        this.onDisconnectedCb();
+      }
+    } 
+    else if (status == Strophe.Status.CONNECTED) {
       console.log('Strophe is connected.');
-      this.onConnectedCb();
+      if(typeof(this.onConnectedCb) != 'undefined') {
+        this.onConnectedCb();
+      }
       this.connection.muc.join(this.roomAndServer(), this.username, this.onMessage.bind(this), this.log, this.log);
     }
   },

@@ -16,14 +16,39 @@ describe("XmppComms", function() {
       expect(comms2.room).toBe('fakeroom2');
     });
 
-    it('calls Strophe correctly',function() {
+    it('sets the onConnected, onDisconnected and onMessage callbacks', function() {
       var comms = Object.create(XmppComms);
-      comms.connect('fakeuser', 'fakepass', 'fakeroom');
-      expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
-      expect(comms.connection.jid).toBe(comms.jid());
-      expect(comms.connection.password).toBe(comms.password);
-      expect(comms.connection.onConnectCb).toBe(comms.onConnect);
-    })
+      var onConnectedSpy = jasmine.createSpy('onConnectedSpy');
+      var onDisconnectedSpy = jasmine.createSpy('onDisconnectedSpy');
+      var onMessageSpy = jasmine.createSpy('onMessageSpy');
+
+      comms.connect('fakeuser', 'fakepass', 'fakeroom', onConnectedSpy, onDisconnectedSpy, onMessageSpy);
+      expect(comms.onConnectedCb).toBe(onConnectedSpy);
+      expect(comms.onDisconnectedCb).toBe(onDisconnectedSpy);
+      expect(comms.onMessageCb).toBe(onMessageSpy);
+    });
+
+    describe('Strophe setup', function(){
+      it('sets boshservice, jid and password', function() {
+        var comms = Object.create(XmppComms);
+        comms.connect('fakeuser', 'fakepass', 'fakeroom');
+        expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
+        expect(comms.connection.jid).toBe(comms.jid());
+        expect(comms.connection.password).toBe(comms.password);
+      });
+
+      it('sets the onServerConnect callback',function() {
+        var comms = Object.create(XmppComms);
+        spyOn(comms, 'onServerConnect');
+        comms.connect('fakeuser', 'fakepass', 'fakeroom');
+        //we call it because that we can check if the spy was actually passed in and called, we can check the function directly because it was wrapped in a `bind` call
+        comms.connection.onConnectCb();
+        expect(comms.onServerConnect).toHaveBeenCalled();
+        // expect(comms.connection.onDisconnectedCb).toBe(comms.onConnect);
+      })
+
+    });
+
 
   });
 
@@ -48,7 +73,7 @@ describe("XmppComms", function() {
       it('returns true', function() {
         var comms = Object.create(XmppComms);
         comms.connect('fakeuser', 'fakepass', 'fakeroom');
-        comms.onConnect(Strophe.Status.CONNECTED);
+        comms.onServerConnect(Strophe.Status.CONNECTED);
         expect(comms.isConnected()).toBe(true);
       });
     });
@@ -58,15 +83,15 @@ describe("XmppComms", function() {
         var comms = Object.create(XmppComms);
         comms.connect('fakeuser', 'fakepass', 'fakeroom');
         expect(comms.isConnected()).toBe(false);
-        comms.onConnect(Strophe.Status.CONNECTING);
+        comms.onServerConnect(Strophe.Status.CONNECTING);
         expect(comms.isConnected()).toBe(false);
-        comms.onConnect(Strophe.Status.DISCONNECTED);
+        comms.onServerConnect(Strophe.Status.DISCONNECTED);
         expect(comms.isConnected()).toBe(false);
       });
     });
   });
 
-  describe('#onConnect', function() {
+  describe('#onServerConnect', function() {
     var comms;
 
     beforeEach(function(){
@@ -75,21 +100,22 @@ describe("XmppComms", function() {
     });
 
     it('sets the currentStatus',function() {
-      comms.onConnect(Strophe.Status.CONNECTING);
+      comms.onServerConnect(Strophe.Status.CONNECTING);
       expect(comms.currentStatus).toBe(Strophe.Status.CONNECTING);
-      comms.onConnect(Strophe.Status.DISCONNECTED);
+      comms.onServerConnect(Strophe.Status.DISCONNECTED);
       expect(comms.currentStatus).toBe(Strophe.Status.DISCONNECTED);
     })
 
     describe('when status is CONNECTED',function() {
       it('joins the specified room', function() {
         mucSpy = spyOn(comms.connection.muc,'join');
-        comms.onConnect(Strophe.Status.CONNECTED);
+        comms.onServerConnect(Strophe.Status.CONNECTED);
         expect(mucSpy).toHaveBeenCalledWith(comms.roomAndServer(),
                                             comms.username,
-                                            comms.onMessage,
-                                            console.log,
-                                            console.log
+                                            //need to do this because onMessage is having bind(this) called on it and it writtens a wrapped function - need to figureout a better way to test these type of cases
+                                            jasmine.any(Function),
+                                            comms.log,
+                                            comms.log
                                            );
       });
     });
