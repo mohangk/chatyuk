@@ -41,13 +41,25 @@ var XmppComms = {
     this.username = username;
     this.password = password;
     this.room = room;
-    this.onConnectedCb = onConnectedCb;
-    this.onDisconnectedCb = onDisconnectedCb;
-    this.onMessageCb = onMessageCb;
+    // if(typeof(onConnectedCb) != 'undefined') {
+      this.onConnectedCb = onConnectedCb;
+    //}
+
+    // if(typeof(onDisconnectedCb) != 'undefined') {
+      this.onDisconnectedCb = onDisconnectedCb;
+    //}
+
+    if(onMessageCb != null || typeof(onMessageCb) != 'undefined') {
+      this.onMessageCb = onMessageCb;
+    }
 
     this.connection.connect(this.jid(),
                        this.password,
                        this.onServerConnect.bind(this));
+  },
+
+  setOnMessageCb: function(onMessageCb) {
+    this.onMessageCb = onMessageCb;
   },
 
   disconnect: function() {
@@ -61,6 +73,8 @@ var XmppComms = {
   },
 
   onMessage: function(message, room) {
+
+    console.log(">> IN comms::onMessage -this.onMesage");
     var $message = $(message),
         body = $message.children('body').text(),
         jid = $message.attr('from'),
@@ -68,7 +82,9 @@ var XmppComms = {
         sender = resource && Strophe.unescapeNode(resource) || '',
         delayed = $message.find('delay').length > 0,
         subject = $message.children('subject').text();
+    console.log(">> IN comms::onMessage callign this.onMessageCb", this.onMessageCb);
     this.onMessageCb({ body: body, sender: sender });
+    console.log('IN comms::onMessage - return');
     return true;
   },
 
@@ -105,6 +121,8 @@ var XmppComms = {
       if(typeof(this.onConnectedCb) != 'undefined') {
         this.onConnectedCb();
       }
+      console.log(">> IN comms::onServerConnnect - set this.onMesage");
+      
       this.connection.muc.join(this.roomAndServer(), this.username, this.onMessage.bind(this), this.log, this.log);
     }
   },

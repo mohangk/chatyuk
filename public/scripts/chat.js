@@ -58,15 +58,16 @@ var Avatar = React.createClass({
     };
   },
 
+  updateState: function() {
+	  this.setState({
+      loggedIn: this.props.comms.isConnected(),
+      username: this.props.comms.username,
+      room: this.props.comms.room
+    });
+  },
+
   loggedInAs: function(username, room) {
-    this.props.comms.connect(username, 
-                             '', 
-                             room,
-                             function(){alert('i just got connected')},
-                             function(){alert('i just got disconnected')},
-                             function(){alert('i just got message')}
-                            );
-    this.setState({loggedIn: true, username: username, room: room})
+    this.props.comms.connect(username, '', room, this.updateState.bind(this), this.updateState.bind(this));
   },
 
   logout: function() {
@@ -84,9 +85,14 @@ var Avatar = React.createClass({
 });
 
 var MessagePane = React.createClass({
+  componentDidMount: function() {
+    console.log(">> IN setOnMessageCb with:", this.addMessage);
+    this.props.comms.setOnMessageCb(this.addMessage);
+  },
+
   getInitialState: function() {
     var messages = []
-    if(this.props.messages !== 'undefined') {
+    if(typeof(this.props.messages) != 'undefined') {
       messages = this.props.messages;
     }
 	  return {
@@ -95,6 +101,7 @@ var MessagePane = React.createClass({
   },
 
   addMessage: function(message) {
+    console.log(">> IN ADD MESSAGE with:", message);
     var messages = this.state.messages;
     messages.push(message);
     this.setState({messages: messages});
@@ -131,6 +138,6 @@ React.render(
 );
 
 React.render(
-  <MessagePane messages={[{sender: 'John', body: 'Message 1'}, {sender: 'Jesus', body: 'Message 2'}]} />,
+  <MessagePane comms={comms} />,
   document.getElementById('test-message-pane')
 );
