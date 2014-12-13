@@ -1,6 +1,6 @@
 /**
  * TODO
- *
+ * 0. Finish basic UI components
  * 1. Add some testing
  * 2. Add some basic styling - look at converse.js 
  *   - embed to an existing page
@@ -13,12 +13,10 @@
  * Component strucutre is
  *
  *- Chatbox
- * - ChatPane
+ * - MessagePane (done)
+ *  - Message (done)
  *  - Message
- *  - Message
- *  - Message
- *  - Message
- * - MassageForm
+ * - MessageBox
  * - Avatar
  *   - LoginForm/LoggedInBox
  */
@@ -77,7 +75,11 @@ var Avatar = React.createClass({
 
   render: function() {
     if(this.state.loggedIn) {
-     return ( <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} /> )
+     return ( <div>
+               <MessageBox comms={comms} /> 
+               <br/>
+               <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
+             </div> )
     } else {
      return ( <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" /> )
     }
@@ -86,7 +88,6 @@ var Avatar = React.createClass({
 
 var MessagePane = React.createClass({
   componentDidMount: function() {
-    console.log(">> IN setOnMessageCb with:", this.addMessage);
     this.props.comms.setOnMessageCb(this.addMessage);
   },
 
@@ -101,7 +102,6 @@ var MessagePane = React.createClass({
   },
 
   addMessage: function(message) {
-    console.log(">> IN ADD MESSAGE with:", message);
     var messages = this.state.messages;
     messages.push(message);
     this.setState({messages: messages});
@@ -130,14 +130,27 @@ var Message = React.createClass({
   }
 });
 
+var MessageBox = React.createClass({
+  sendMessage: function(e) {
+    if(e.which == 13) {
+      e.preventDefault();
+      this.props.comms.groupchat(e.target.value)
+      e.target.value = '';
+    }
+  },
+  render: function() {
+      return (<textarea onKeyPress={this.sendMessage}></textarea>)
+  }
+});
+
 var comms = Object.create(XmppComms);
 
 React.render(
   <Avatar comms={comms} />,
-  document.getElementById('content')
+  document.getElementById('avatar')
 );
 
 React.render(
   <MessagePane comms={comms} />,
-  document.getElementById('test-message-pane')
+  document.getElementById('message-pane')
 );
