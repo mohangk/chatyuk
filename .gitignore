@@ -1,2 +1,10 @@
 .vagrant
 .DS_Store
+.module-cache
+node_modules
+
+# Leave out compiled files
+
+public/scripts/.module-cache/
+public/scripts/components
+

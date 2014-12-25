@@ -1,0 +1,24 @@
+{
+  "name": "chatyuk",
+  "version": "0.0.1",
+  "description": "A fun embed-able multiuser chat room for fun and profit",
+  "dependencies": {
+    "browserify": "^7.0.3",
+    "uglifyify": "^2.6.0",
+    "reactify": "^0.17.1"
+  },
+  "scripts": {
+    "build-tests": "jsx -w -x jsx jasmine/spec/components/ public/scripts/components",
+    "build-components": "jsx -w -x jsx app/components/ public/scripts/components"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohangk/chatyuk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohangk/chatyuk/issues"
+  },
+  "homepage": "https://github.com/mohangk/chatyuk"
+}

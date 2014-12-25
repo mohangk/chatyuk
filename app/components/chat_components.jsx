@@ -1,26 +1,3 @@
-/**
- * TODO
- * 0. Finish basic UI components
- * 1. Add some testing
- * 2. Add some basic styling - look at converse.js 
- *   - embed to an existing page
- *   - must be able to fold and open
- * 3. Display roster
- * 4. Presence (when people join or leave)
- * 5. Prebinding
- *    -http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
- *
- * Component strucutre is
- *
- *- Chatbox
- * - MessagePane (done)
- *  - Message (done)
- *  - Message
- * - MessageBox
- * - Avatar
- *   - LoginForm/LoggedInBox
- */
-
 var LoggedInBox = React.createClass({
   render: function() {
     return (
@@ -142,15 +119,3 @@ var MessageBox = React.createClass({
       return (<textarea onKeyPress={this.sendMessage}></textarea>)
   }
 });
-
-var comms = Object.create(XmppComms);
-
-React.render(
-  <Avatar comms={comms} />,
-  document.getElementById('avatar')
-);
-
-React.render(
-  <MessagePane comms={comms} />,
-  document.getElementById('message-pane')
-);
