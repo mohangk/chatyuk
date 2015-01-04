@@ -6,11 +6,12 @@ Chatyuk! (Let chat!) is very early in its development phase. It hopes to grow up
 
 ### JS code
 
-Run `npm install` to install required packages for development
+1. Run `npm install` to install required packages for development
+2. Install jsx -  `npm install react-tools -g`
 
 ### Server component
 
-Run `vagrant up`
+Run `vagrant up` (This is not completed yet)
 
 ## Run the code
 
@@ -20,6 +21,6 @@ Run `vagrant up`
 
 ## Run tests
 
-1.Run `npm run-script build-tests` to continuosly build the tests.
+1. Run `npm run-script build-tests` to continuosly build the tests.
 2. In the root directory run `python -m SimplehHTTPServer`
 3. Access the tests at http://localhost:8000/jasmine/SpecRunner.html

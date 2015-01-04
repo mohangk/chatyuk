@@ -24,45 +24,6 @@ var LoginForm = React.createClass({
   }
 });
 
-var Avatar = React.createClass({
-  getInitialState: function() {
-	  return {
-      loggedIn: this.props.comms.isConnected(),
-      username: this.props.comms.username,
-      room: this.props.comms.room
-    };
-  },
-
-  updateState: function() {
-	  this.setState({
-      loggedIn: this.props.comms.isConnected(),
-      username: this.props.comms.username,
-      room: this.props.comms.room
-    });
-  },
-
-  loggedInAs: function(username, room) {
-    this.props.comms.connect(username, '', room, this.updateState.bind(this), this.updateState.bind(this));
-  },
-
-  logout: function() {
-    this.props.comms.disconnect();
-    this.setState({loggedIn: false, username: null, room: null})
-  },
-
-  render: function() {
-    if(this.state.loggedIn) {
-     return ( <div>
-               <MessageBox comms={comms} /> 
-               <br/>
-               <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
-             </div> )
-    } else {
-     return ( <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" /> )
-    }
-  }
-});
-
 var MessagePane = React.createClass({
   componentDidMount: function() {
     this.props.comms.setOnMessageCb(this.addMessage);
@@ -73,7 +34,7 @@ var MessagePane = React.createClass({
     if(typeof(this.props.messages) != 'undefined') {
       messages = this.props.messages;
     }
-	  return {
+    return {
       messages: messages
     };
   },
@@ -88,21 +49,24 @@ var MessagePane = React.createClass({
     var messageNodes = this.state.messages.map(function(message, index) {
       return (
         <Message sender={message.sender} body={message.body} key={index} />
-      );
+      )
     });
-    return (
-      <ul className="message-pane">
-        {messageNodes}
-      </ul>
-    );
-  },
 
+    return (
+        <ul className="chat-content">
+          {messageNodes}
+        </ul>
+    );
+  }
 });
 
 var Message = React.createClass({
   render: function() {
     return(
-      <li>{this.props.sender}:{this.props.body}</li>
+      <li className='chat-message'>
+        <span className="chat-message-room">{this.props.sender}:</span>
+        <span className="chat-message-content">{this.props.body}</span>
+      </li>
     );
   }
 });
@@ -116,6 +80,102 @@ var MessageBox = React.createClass({
     }
   },
   render: function() {
-      return (<textarea onKeyPress={this.sendMessage}></textarea>)
+      return (<form className="sendXMPPMessage"> <textarea placeholder="Message" className="chat-textarea" onKeyPress={this.sendMessage}></textarea></form>)
+  }
+});
+
+var ChatBox = React.createClass({
+  
+  getInitialState: function() {
+
+    return {
+      minimized: false
+    };
+  },
+
+  minimize: function() {
+    this.setState({minimized: true});
+  },
+
+  maximize: function() {
+    this.setState({minimized: false});
+  },
+
+  render: function() {
+
+    var controlBoxStyle = {
+      display: (this.state.minimized ? 'block' : 'none')
+    }
+
+    var chatRoomStyle = {
+      display: (!this.state.minimized ? 'block' : 'none')
+    }
+    return (
+         <div id="conversejs">
+         <a href="#" onClick={this.maximize}  style={controlBoxStyle} id="toggle-controlbox" className="toggle-controlbox"><span className="conn-feedback">Toggle chat</span> </a>
+         <div style={chatRoomStyle} className="chatroom">
+           <div className="box-flyout" >
+             <div className="dragresize dragresize-tm"></div>
+             <div className="chat-head chat-head-chatroom">
+                <a onClick={this.minimize} className="toggle-chatbox-button icon-minus"></a>
+                <div className="chat-title"> Chatroom </div>
+                <p className="chatroom-topic">May the force be with you</p>
+            </div>
+             <div className="chat-body" >
+             <div className="chat-area">
+             {this.props.children}
+             </div>
+           </div>
+         </div>
+       </div>
+       </div>
+     );
+  }
+});
+
+
+var ChatArea = React.createClass({
+  getInitialState: function() {
+    return {
+      loggedIn: this.props.comms.isConnected(),
+      username: this.props.comms.username,
+      room: this.props.comms.room
+    };
+  },
+
+  updateState: function() {
+    this.setState({
+      loggedIn: this.props.comms.isConnected(),
+      username: this.props.comms.username,
+      room: this.props.comms.room
+    });
+  },
+
+  loggedInAs: function(username, room) {
+    this.props.comms.connect(username, '', room, this.updateState, this.updateState);
+  },
+
+  logout: function() {
+    this.props.comms.disconnect();
+    this.setState({loggedIn: false, username: null, room: null})
+  },
+
+  render: function() {
+
+    if(this.props.comms.isConnected()) { 
+      return (
+        <ChatBox>
+          <MessagePane comms={this.props.comms} />
+          <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
+          <MessageBox comms={this.props.comms} />
+        </ChatBox>
+      );
+    } else {
+      return (
+        <ChatBox>
+         <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" />
+        </ChatBox>
+      );
+    }
   }
 });

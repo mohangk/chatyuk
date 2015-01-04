@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title id="pageTitle">Converse.js: Mockup</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Converse.js: Mockup" />
+    <link type="text/css" href="css/theme.css" rel="stylesheet" media="screen" />
+    <link type="text/css" href="css/converse.css" rel="stylesheet" media="screen" />
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+
+<!-- HEADER -->
+
+
+<div id="conversejs">
+    <a href="#" id="toggle-controlbox" class="toggle-controlbox" style="display: none;"><span class="conn-feedback">Toggle chat</span> </a>
+    <div class="chatroom">
+        <div class="box-flyout">
+            <div class="dragresize dragresize-tm"></div>
+            <div class="chat-head chat-head-chatroom">
+                <a class="toggle-chatbox-button icon-minus"></a>
+                <div class="chat-title"> Chatroom </div>
+                <p class="chatroom-topic">May the force be with you</p>
+            </div>
+            <div class="chat-body">
+                <div class="chat-area">
+                    <ul class="chat-content">
+                        <!-- <time class="chat&#45;date" datetime="2013&#45;06&#45;04T00:00:00.000Z">Tue Jun 04 2013</time> -->
+                        <li class="chat-message ">
+                            <span class="chat-message-room">18:50 luke:&nbsp;</span>
+                            <span class="chat-message-content">leia: hi :)</span>
+                        </li>
+                        <li class="chat-message ">
+                            <span class="chat-message-room">19:40 leia:&nbsp;</span>
+                            <span class="chat-message-content">
+                                I'll be gone for a while, will be back in about an hour</span>
+                        </li>
+                        <li class="chat-message ">
+                            <span class="chat-message-room">19:40 Obi-wan Kenobi, Jedi Master:&nbsp;</span>
+                            <span class="chat-message-content">
+                                I'll be gone for a while, will be back in about an hour</span>
+                        </li>
+                        <li class="chat-message">
+                            <span class="chat-message-me">19:42 me:&nbsp;</span>
+                            <span class="chat-message-content">Supercalifragilisticexpialidociousstillnotlongenough</span>
+                        </li>
+                        <li class="chat-message ">
+                            <span class="chat-message-room">19:43 Obi-wan Kenobi, Jedi Master:&nbsp;</span>
+                            <span class="chat-message-content">Another message to check that scrolling works.</span>
+                        </li>
+                    </ul>
+
+                    <form class="sendXMPPMessage" action="" method="post">
+                        <textarea type="text" class="chat-textarea" placeholder="Message"></textarea>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+$(document).ready(function () {
+    $('a[href=#chatrooms]').click(function (ev) { 
+        switchTab(ev);
+    });
+    $('a[href=#users]').click(function (ev) {
+        switchTab(ev); 
+    });
+
+    $("a.choose-xmpp-status").click(function (ev) {
+        ev.preventDefault();
+        $(ev.target).parent().parent().siblings('dd').find('ul').toggle('fast');
+    });
+
+    $("a.change-xmpp-status-message").click(function (ev) {
+        ev.preventDefault();
+        var form = ''+
+                '<form id="set-custom-xmpp-status">' +
+                    '<input type="text" class="custom-xmpp-status"I am online"'+
+                        'placeholder="I am online"/>' +
+                    '<button type="submit">Save</button>' +
+                '</form>';
+
+        $(ev.target).closest('.xmpp-status').replaceWith(form);
+        $(ev.target).closest('.custom-xmpp-status').focus().focus();
+    });
+
+    $('.toggle-xmpp-contact-form').click(function (ev) {
+        ev.preventDefault();
+        $(ev.target).parent().parent().find('.search-xmpp').toggle('fast', function () {
+            if ($(this).is(':visible')) {
+                $(this).find('input.username').focus();
+            }
+        });
+    });
+
+    var switchTab = function (ev) {
+        ev.preventDefault();
+        var $tab = $(ev.target),
+            $sibling = $tab.parent().siblings('li').children('a'),
+            $tab_panel = $($tab.attr('href')),
+            $sibling_panel = $($sibling.attr('href'));
+
+        $sibling_panel.hide();
+        $sibling.removeClass('current');
+        $tab.addClass('current');
+        $tab_panel.show();
+    }
+
+    $(function() {
+        $('.close-chatbox-button').click(function(ev) {
+            var $grandparent = $(ev.target).parent().parent().parent();
+            $grandparent.hide(300, function () {
+                // Webkit fix
+                document.getElementById('conversejs').style.display = 'none';
+                document.getElementById('conversejs').offsetHeight; // no need to store this anywhere, the reference is enough
+                document.getElementById('conversejs').style.display = 'block';
+            });
+        });
+
+        $('.toggle-participants a').click(function (ev) {
+            var $el = $(ev.target);
+            if ($el.hasClass("icon-hide-users")) {
+                $el.removeClass('icon-hide-users').addClass('icon-show-users');
+                $('div.participants').animate({width: 0}).hide();
+                $el.closest('.chat-area').animate({width: '100%'});
+                $el.closest('form.sendXMPPMessage').animate({width: '100%'});
+            } else {
+                $el.removeClass('icon-show-users').addClass('icon-hide-users');
+                $el.closest('.chat-area').animate({width: '200px'}, function () {
+                    $('div.participants').css({width: '100px'}).show();
+                });
+                $el.closest('form.sendXMPPMessage').animate({width: '200px'});
+            }
+        });
+
+        $('.toggle-chatbox-button').click(function(ev) {
+            var $grandparent = $(ev.target).parent().parent().parent();
+            $grandparent.fadeOut('fast');
+            $('#toggle-controlbox').fadeIn('fast');
+        });
+
+        $('#toggle-controlbox').click(function(ev){
+          $('.chatroom').fadeIn('fast');
+            $('#toggle-controlbox').fadeOut('fast');
+        });
+
+        // Clickable Dropdown
+        $('.toggle-otr').click(function(e) {
+            $('.toggle-otr ul').slideToggle(200);
+            e.stopPropagation();
+        });
+
+        $('.toggle-smiley').click(function(e) {
+            $(e.target).find('ul').slideToggle(200);
+            e.stopPropagation();
+        });
+        $(document).click(function() {
+            if ($('.toggle-otr ul').is(':visible')) {
+                $('.toggle-otr ul', this).slideUp(200);
+            }
+            if ($('.toggle-smiley ul').is(':visible')) {
+                $('.toggle-smiley ul', this).slideUp(200);
+            }
+        });
+    });
+});
+</script>
+</html>

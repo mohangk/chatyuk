@@ -27,12 +27,8 @@
 
 var comms = Object.create(XmppComms);
 
-React.render(
-  <Avatar comms={comms} />,
-  document.getElementById('avatar')
-);
 
 React.render(
-  <MessagePane comms={comms} />,
-  document.getElementById('message-pane')
+  <ChatArea comms={comms} />,
+  document.body
 );
