@@ -39,6 +39,18 @@ var MessagePane = React.createClass({
     };
   },
 
+  componentWillUpdate: function() {
+    var node = this.getDOMNode();
+    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+  },
+
+  componentDidUpdate: function() {
+    if (this.shouldScrollBottom) {
+      var node = this.getDOMNode();
+      node.scrollTop = node.scrollHeight
+    }
+  },
+
   addMessage: function(message) {
     var messages = this.state.messages;
     messages.push(message);
