@@ -87,9 +87,11 @@ var MessageBox = React.createClass({
 var ChatBox = React.createClass({
   
   getInitialState: function() {
-
     return {
-      minimized: false
+      minimized: false,
+      dragging: false,
+      height: 400,
+      lastDragY: 0,
     };
   },
 
@@ -101,6 +103,42 @@ var ChatBox = React.createClass({
     this.setState({minimized: false});
   },
 
+  dragStart: function(e) {
+    if(e.button !== 0) return;
+    this.setState({
+      dragging: true,
+      lastDragY: e.pageY,
+    });
+    e.stopPropagation();
+    e.preventDefault();
+  },
+
+  updateHeight: function(e, dragging) {
+    var height = this.state.height + (this.state.lastDragY - e.pageY);
+    this.setState({dragging: dragging, lastDragY: e.pageY, height: height});
+    e.stopPropagation();
+    e.preventDefault();
+  },
+
+  onMouseUp: function (e) {
+    this.updateHeight(e, false);
+  },
+
+  onMouseMove: function (e) {
+    if (!this.state.dragging) return
+    this.updateHeight(e, true);
+  },
+
+  componentDidUpdate: function (props, state) {
+    if (this.state.dragging && !state.dragging) {
+      document.addEventListener('mousemove', this.onMouseMove)
+      document.addEventListener('mouseup', this.onMouseUp)
+    } else if (!this.state.dragging && state.dragging) {
+      document.removeEventListener('mousemove', this.onMouseMove)
+      document.removeEventListener('mouseup', this.onMouseUp)
+    }
+  },
+
   render: function() {
 
     var controlBoxStyle = {
@@ -110,12 +148,17 @@ var ChatBox = React.createClass({
     var chatRoomStyle = {
       display: (!this.state.minimized ? 'block' : 'none')
     }
+
+    var boxFlyoutStyle = {
+      height: this.state.height+'px'
+    }
+
     return (
          <div id="conversejs">
          <a href="#" onClick={this.maximize}  style={controlBoxStyle} id="toggle-controlbox" className="toggle-controlbox"><span className="conn-feedback">Toggle chat</span> </a>
          <div style={chatRoomStyle} className="chatroom">
-           <div className="box-flyout" >
-             <div className="dragresize dragresize-tm"></div>
+           <div className="box-flyout" style={boxFlyoutStyle} >
+             <div className="dragresize dragresize-tm" onMouseDown={this.dragStart}></div>
              <div className="chat-head chat-head-chatroom">
                 <a onClick={this.minimize} className="toggle-chatbox-button icon-minus"></a>
                 <div className="chat-title"> Chatroom </div>
