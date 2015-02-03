@@ -1,17 +1,17 @@
 /**
  * TODO
- * 0. Finish basic UI components 
- * 1. Add some testing
- * 2. Add some basic styling - look at converse.js 
- *   - embed to an existing page
- *   - must be able to fold and open
- * 3. Browserify
- * 4. Display roster
- * 5. Presence (when people join or leave)
- * 6. Prebinding
- *    -http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
- *
- * 7. Remove jQuery dependence in comms.js
+ * 0. Refactor current stylesheets, figure out best way to work with react and custom templates
+ * 1. Add ability to send emoticons, images, gifs
+ * 2. Setup sample embed, update README with screenshots
+ * 3. Add in page mode (a-la twitch or cliponyu)
+ * 4. When I am chatting, although scrolled up, scroll the chat window done
+ * 5. Add the "More chats below" ala Twitch
+ * 6. Prebinding and security - http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
+ * 7. Add tests for React components
+ * 8. Display roster
+ * 9. Presence (when people join or leave)
+ * 10. Browserify or jspmo
+ * 11. Remove jQuery dependence in comms.js
  *
  * Component strucutre is
  *
@@ -24,9 +24,7 @@
  *   - LoginForm/LoggedInBox
  */
 
-
 var comms = Object.create(XmppComms);
-
 
 React.render(
   <ChatArea comms={comms} />,
