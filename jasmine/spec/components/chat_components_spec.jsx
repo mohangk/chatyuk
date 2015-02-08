@@ -52,7 +52,7 @@ describe("UI Components", function() {
 
       it('renders the emoticon for the specifed type', function() {
         instance = TestUtils.renderIntoDocument(<Emoticon type="smiley" />)
-        expect(instance.getDOMNode().className).toEqual('emoticon icon-smiley');
+        expect(instance.getDOMNode().className).toEqual(instance.emoticonClass());
       });
 
 
@@ -87,7 +87,7 @@ describe("UI Components", function() {
       describe('when there is formatting', function() {
         it('replaces the formatting with the appropriate Emoticon elements', function() {
           instance = TestUtils.renderIntoDocument(<Message />)
-          expect(instance.formatBody('Hi :) nice to see you again :( !')).toEqual(['Hi ',<Emoticon type="smiley"/>,' nice to see you again ',<Emoticon type="sad"/>,' !']);
+          expect(instance.formatBody('Hi :) nice to see you again :( !')).toEqual(['Hi ',<Emoticon type="smiley"/>,' nice to see you again ',<Emoticon type="disappointed"/>,' !']);
         })
 
       });
@@ -98,7 +98,7 @@ describe("UI Components", function() {
       describe('when there is no matching emoticon', function() {
         it('returns the text as a single element in an array', function() {
             instance = TestUtils.renderIntoDocument(<Message />)
-            expect(instance.tokenize(':(','sad','Hi :) nice to see you again!')).toEqual([ 'Hi :) nice to see you again!']);
+            expect(instance.tokenize(':(','disappointed','Hi :) nice to see you again!')).toEqual([ 'Hi :) nice to see you again!']);
         });
       });
 

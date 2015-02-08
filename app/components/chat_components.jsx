@@ -83,30 +83,30 @@ var Message = React.createClass({
       return '';
     }
     
-    var emoticons = { '>:)' :'evil',
+    var emoticons = { '>:)' :'smiling-imp',
                       ':)'  :'smiley',
                       ':-)' :'smiley',
                       ';)'  :'wink',
                       ';-)' :'wink',
                       ':D'  :'grin',
                       ':-D' :'grin',
-                      ':P'  :'tongue',
-                      ':-P' :'tongue',
-                      ':p'  :'tongue',
-                      ':-p' :'tongue',
-                      '8)'  :'cool',
+                      ':P'  :'stuck-out-tongue',
+                      ':-P' :'stuck-out-tongue',
+                      ':p'  :'stuck-out-tongue',
+                      ':-p' :'stuck-out-tongue',
+                      '8)'  :'sunglasses',
                       ':S'  :'confused',
-                      ':\\' :'wondering',
-                      ':/'  :'wondering',
+                      ':\\' :'pensive',
+                      ':/'  :'pensive',
                       '>:(' :'angry',
-                      ':('  :'sad',
-                      ':-(' :'sad',
-                      ':O'  :'shocked',
-                      ':o'  :'shocked',
-                      ':-O' :'shocked',
-                      '=-O' :'shocked',
+                      ':('  :'disappointed',
+                      ':-(' :'disappointed',
+                      ':O'  :'open-mouth',
+                      ':o'  :'open-mouth',
+                      ':-O' :'open-mouth',
+                      '=-O' :'open-mouth',
                       '<3'  : 'heart',
-                      '(^.^)b' :'thumbs-up' };
+                      '(^.^)b' :'thumbsup' };
 
     var textArray = [text];
 
@@ -171,11 +171,11 @@ var Message = React.createClass({
 var Emoticon = React.createClass({
 
   emoticonClass: function() {
-    return 'emoticon icon-'+this.props.type;
+    return 'twa twa-lg twa-'+this.props.type;
   },
 
   render: function() {
-    return <span className={this.emoticonClass()}></span>
+    return <i className={this.emoticonClass()}></i>
   }
 });
 
