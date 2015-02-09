@@ -171,7 +171,7 @@ var Message = React.createClass({
 var Emoticon = React.createClass({
 
   emoticonClass: function() {
-    return 'twa twa-lg twa-'+this.props.type;
+    return 'twa twa-'+this.props.type;
   },
 
   render: function() {
@@ -288,7 +288,7 @@ var ChatBox = React.createClass({
              <div className="chat-head chat-head-chatroom">
                 <a onClick={this.minimize} className="toggle-chatbox-button icon-minus"></a>
                 <div className="chat-title"> Chatroom </div>
-                <p className="chatroom-topic">May the force be with you</p>
+                <p className="chatroom-topic"></p>
             </div>
              <div className="chat-body" >
              <div className="chat-area">
