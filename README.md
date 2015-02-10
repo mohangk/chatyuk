@@ -13,18 +13,27 @@ Chatyuk! (Let chat!) is very early in its development phase. It hopes to grow up
 
 ### Server component
 
-Run `vagrant up` (This is not completed yet)
+Run `vagrant up`
+
+### Host setup
+
+Due to the way some of the configurations are hardcoded now, you will need to add these following 2 settings to your /etc/hosts file. 
+
+```
+127.0.0.1 chatyuk.com
+127.0.0.1 conference.chatyuk.com
+```
 
 ## Run the code
 
 1. Run `npm run-script build-components` to continuosly build the code.
-2. In the root directory run `python -m SimplehHTTPServer`
+2. In the root directory run `python -m SimpleHTTPServer`
 3. Access the application at http://localhost:8000/public/chat.html
 
 ## Run tests
 
 1. Run `npm run-script build-tests` to continuosly build the tests.
-2. In the root directory run `python -m SimplehHTTPServer`
+2. In the root directory run `python -m SimpleHTTPServer`
 3. Access the tests at http://localhost:8000/jasmine/SpecRunner.html
 
 ## Features
@@ -56,6 +65,8 @@ Run `vagrant up` (This is not completed yet)
 1. Add the "More chats below" ala Twitch
 1. Remove jQuery dependence in comms.js
 1. Figure out best way to handle customization => themes, emoticons 
+1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
+1. HTTPs ?
 
 
 ## Credits
