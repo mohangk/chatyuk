@@ -48,7 +48,7 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
   - gifs
   - youtube videos
   - vidio videos
-1. Complete server setup in vagrant
+1. Remove hardcoded domain names from both client and server configurations
 1. Refactor current stylesheets - either move everything to React components or leave in stylesheet or halhway house ? 
 1. Add sample on how to embed chatyuk on existing page
 1. Add in page mode (a-la twitch or cliponyu)

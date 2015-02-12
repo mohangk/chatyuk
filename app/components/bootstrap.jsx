@@ -12,6 +12,7 @@
  */
 
 var comms = Object.create(XmppComms);
+var emotify = Object.create(Emotify);
 
 React.render(
   <ChatArea comms={comms} />,

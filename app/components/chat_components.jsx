@@ -72,6 +72,8 @@ var MessagePane = React.createClass({
   }
 });
 
+var emotify = Object.create(Emotify);
+
 var Message = React.createClass({
 
   formatSender: function(sender) {
@@ -83,80 +85,12 @@ var Message = React.createClass({
       return '';
     }
     
-    var emoticons = { '>:)' :'smiling-imp',
-                      ':)'  :'smiley',
-                      ':-)' :'smiley',
-                      ';)'  :'wink',
-                      ';-)' :'wink',
-                      ':D'  :'grin',
-                      ':-D' :'grin',
-                      ':P'  :'stuck-out-tongue',
-                      ':-P' :'stuck-out-tongue',
-                      ':p'  :'stuck-out-tongue',
-                      ':-p' :'stuck-out-tongue',
-                      '8)'  :'sunglasses',
-                      ':S'  :'confused',
-                      ':\\' :'pensive',
-                      ':/'  :'pensive',
-                      '>:(' :'angry',
-                      ':('  :'disappointed',
-                      ':-(' :'disappointed',
-                      ':O'  :'open-mouth',
-                      ':o'  :'open-mouth',
-                      ':-O' :'open-mouth',
-                      '=-O' :'open-mouth',
-                      '<3'  : 'heart',
-                      '(^.^)b' :'thumbsup' };
-
     var textArray = [text];
 
-    for(var emoticon in emoticons) {
-      textArray = this.tokenizeTextArray(emoticon, emoticons[emoticon], textArray);
-    }
+    textArray = emotify.parse(textArray);
 
     return textArray;
   },
-
-
-  tokenizeTextArray: function(emoticon, type, textArray) {
-
-    textArray.forEach(function(text, index) {
-      if(typeof text != 'string') { return; };
-
-      var processedTextArray = this.tokenize(emoticon, type, text);
-      this.spliceTextArray(textArray, index, processedTextArray);
-
-    }, this);
-
-    return textArray;
-  },
-
-
-  spliceTextArray: function(textArray, indexToSwap, newTextArrayElement) {
-    var args = [indexToSwap, 1].concat(newTextArrayElement);
-    Array.prototype.splice.apply(textArray, args);
-  },
-
-
-  tokenize: function(emoticon, type, text) {
-    var textArray = text.split(emoticon);
-    var processedTextArray=[];
-
-    if(textArray.length == 1) {
-      return textArray;
-    }
-
-    textArray.forEach(function(element, index) {
-      processedTextArray.push(element);               
-
-      if(index+1 < textArray.length) {
-        processedTextArray.push(<Emoticon type={type} />);
-      }
-    });
-
-    return processedTextArray;
-  },
-
 
   render: function() {
     return(
@@ -168,16 +102,7 @@ var Message = React.createClass({
   }
 });
 
-var Emoticon = React.createClass({
 
-  emoticonClass: function() {
-    return 'twa twa-'+this.props.type;
-  },
-
-  render: function() {
-    return <i className={this.emoticonClass()}></i>
-  }
-});
 
 var MessageBox = React.createClass({
   sendMessage: function(e) {
