@@ -1,11 +1,11 @@
 var Emoticon = React.createClass({
 
-  emoticonClass: function() {
-    return 'twa twa-'+this.props.type;
+  backgroundImageStyle: function() {
+    return { backgroundImage: 'url("http://twemoji.maxcdn.com/svg/'+emoji_map[this.props.type]+'.svg")' };
   },
 
   render: function() {
-    return <i className={this.emoticonClass()}></i>
+    return <i style={this.backgroundImageStyle()} className='twa' ></i>
   }
 });
 

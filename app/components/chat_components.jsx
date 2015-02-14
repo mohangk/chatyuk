@@ -1,3 +1,5 @@
+var emotify = Object.create(Emotify);
+
 var LoggedInBox = React.createClass({
   render: function() {
     return (
@@ -72,7 +74,6 @@ var MessagePane = React.createClass({
   }
 });
 
-var emotify = Object.create(Emotify);
 
 var Message = React.createClass({
 
