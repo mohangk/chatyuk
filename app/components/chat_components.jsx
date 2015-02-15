@@ -1,4 +1,5 @@
 var emotify = Object.create(Emotify);
+var linkifier = Object.create(Linkifier);
 
 var LoggedInBox = React.createClass({
   render: function() {
@@ -88,6 +89,7 @@ var Message = React.createClass({
     
     var textArray = [text];
 
+    textArray = linkifier.parse(textArray);
     textArray = emotify.parse(textArray);
 
     return textArray;

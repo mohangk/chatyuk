@@ -68,6 +68,10 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
 1. HTTPs ?
 
+## Notes
+
+  - Parsing links from text - http://stackoverflow.com/questions/37684/how-to-replace-plain-urls-with-links
+
 
 ## Credits
 
@@ -76,3 +80,4 @@ This project has borrowed/used/copied code from:
 1. Converse.js - https://conversejs.org/
 1. Strophe.js
 1. Twemoji awesome - http://ellekasai.github.io/twemoji-awesome/
+1. Linkify - https://github.com/SoapBox/jQuery-linkify
