@@ -9,7 +9,9 @@ Chatyuk! (Let chat!) is very early in its development phase. It hopes to grow up
 ### JS code
 
 1. Run `npm install` to install required packages for development
-2. Install jsx -  `npm install react-tools -g`
+2. Install browserify globally `npm install browserify -g`
+3. Install watchify globally `npm install watchify -g`
+
 
 ### Server component
 

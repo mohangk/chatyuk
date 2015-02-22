@@ -8,3 +8,5 @@ node_modules
 public/scripts/.module-cache/
 public/scripts/components
 
+# Leave out compiled bundles
+bundle.js
