@@ -17,7 +17,15 @@ describe("Linkifier", function() {
   var linkifier = Object.create(Linkifier);
 
   describe("parse", function() {
-    it('takes a text array and for every string element it finds the links and passes it to replaceLinks', function() {
+
+    it('uses LinkFinder to find links', function() {
+      var linkFinderSpy = spyOn(LinkFinder, 'find').and.callThrough();
+      var srcTextArray = ['onlystring'];
+      linkifier.parse(srcTextArray);
+      expect(linkFinderSpy).toHaveBeenCalledWith('onlystring');
+    });
+
+    it('finds the links and passes it to replaceLinks', function() {
       var srcTextArray = ['Hi http://fake.com/fake.png nice', {fakeToken: true}, 'to see you again http://fake.com/fake2.png !', {fakeToken: 'blah'}, 'random string'];
       var expectedTextArray = ['Hi ',<EmbeddedImage src="http://fake.com/fake.png"/>, ' nice', {fakeToken: true},'to see you again ',<EmbeddedImage src="http://fake.com/fake2.png"/>,' !', {fakeToken: 'blah'}, 'random string'];
 
@@ -28,29 +36,54 @@ describe("Linkifier", function() {
   describe("replaceLinks", function() {
     it('takes a string and array of links to be replaced and returns the processes array', function() {
 
-      var links = [{href: 'http://fake.com/fake.png', value: 'fake.com/fake.png'}, 
-                   {href: 'http://fake.com/fake2.png', value: 'fake.com/fake2.png'}];
+      var links = [{href: 'http://fake.com/fake.png', value: 'fake.com/fake.png', type: 'image'}, 
+                   {href: 'http://fake.com/awesome.html', value: 'fake.com/awesome.html', type: 'url'}];
 
-      var srcText = 'Hi fake.com/fake.png nice to see you again fake.com/fake2.png !';
-      var expectedTextArray = ['Hi ',<EmbeddedImage src="http://fake.com/fake.png"/>,' nice to see you again ',<EmbeddedImage src="http://fake.com/fake2.png"/>,' !'];
+      var srcText = 'Hi fake.com/fake.png nice to see you again fake.com/awesome.html !';
+      var expectedTextArray = ['Hi ',<EmbeddedImage src="http://fake.com/fake.png"/>,' nice to see you again ',<Link href="http://fake.com/awesome.html"/>,' !'];
       expect(linkifier.replaceLinks(links, srcText)).toEqual(expectedTextArray);
     });
   });
 
   describe("tokenize", function() {
-    describe('when there is no matching linke url', function() {
+    describe('when link is not in text', function() {
+
       it('returns the text as a single element in an array', function() {
-          expect(linkifier.tokenize('fake.com/fake.png', 'http://fake.com/fake.png', 'Hi :) nice to see you again!')).toEqual([ 'Hi :) nice to see you again!']);
+          var link =  {
+            value:'fake.com/fake.png', 
+            href: 'http://fake.com/fake.png',
+            type: 'url'
+          };
+          expect(linkifier.tokenize(link,'Hi :) nice to see you again!')).toEqual([ 'Hi :) nice to see you again!']);
       });
     });
   
-    describe('when passed in with the string to match and property to set', function() {
-      it('splits the string at the token and adds an EmbeddedImage element in every occurance of it', function() {
+    describe('when link is in text', function() {
+
+      it('replaces all the token strings with the appropriate element', function() {
           var srcText = 'Hi fake.com/fake.png nice to see you again http://fake.com/fake2.png fake.com/fake.png!';
           var expectedTextArray = ['Hi ',<EmbeddedImage src="http://fake.com/fake.png"/>,' nice to see you again http://fake.com/fake2.png ',<EmbeddedImage src="http://fake.com/fake.png"/>,'!'];
-          expect(linkifier.tokenize('fake.com/fake.png', 'http://fake.com/fake.png', srcText)).toEqual(expectedTextArray);
+
+          var link =  {
+            value:'fake.com/fake.png', 
+            href: 'http://fake.com/fake.png',
+            type: 'image'
+          };
+          expect(linkifier.tokenize(link, srcText)).toEqual(expectedTextArray);
       });
+
     });
+
+  });
+
+  describe('typeToElement', function() {
+    it('returns the right element for the passed in type', function() {
+
+      expect(linkifier.typeToElement('image','http://fake.com/fake2.png')).toEqual(<EmbeddedImage src="http://fake.com/fake2.png"/>);
+      expect(linkifier.typeToElement('url','http://fake.com/awesome.html')).toEqual(<Link href="http://fake.com/awesome.html"/>);
+
+    });
+
   });
 
 });

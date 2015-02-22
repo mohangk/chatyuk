@@ -8,6 +8,12 @@ var EmbeddedImage = React.createClass({
   }
 });
 
+var Link = React.createClass({
+  render: function() {
+    return <a href={this.props.href}>{this.props.href}</a>
+  }
+});
+
 var Linkifier = {
 
   parse: function(textArray) {
@@ -15,7 +21,7 @@ var Linkifier = {
     textArray.forEach(function(text, index) {
       if(typeof text != 'string') { return; };
 
-      var links = linkify.find(text);
+      var links = LinkFinder.find(text);
 
       if(links.length == 0) { return; };
 
@@ -32,18 +38,18 @@ var Linkifier = {
     var textArray = [text];
 
     links.forEach(function(link, index) {
-      textArray = this.tokenizeTextArray(link.value, link.href, textArray);
+      textArray = this.tokenizeTextArray(link, textArray);
     }, this);
 
     return textArray;
   },
 
-  tokenizeTextArray: function(emoticon, type, textArray) {
+  tokenizeTextArray: function(link, textArray) {
 
     textArray.forEach(function(text, index) {
       if(typeof text != 'string') { return; };
 
-      var processedTextArray = this.tokenize(emoticon, type, text);
+      var processedTextArray = this.tokenize(link, text);
       this.spliceTextArray(textArray, index, processedTextArray);
 
     }, this);
@@ -58,8 +64,8 @@ var Linkifier = {
   },
 
 
-  tokenize: function(link, href, text) {
-    var textArray = text.split(link);
+  tokenize: function(link, text) {
+    var textArray = text.split(link.value);
     var processedTextArray=[];
 
     if(textArray.length == 1) {
@@ -70,10 +76,19 @@ var Linkifier = {
       processedTextArray.push(element);               
 
       if(index+1 < textArray.length) {
-        processedTextArray.push(<EmbeddedImage src={href} />);
+        processedTextArray.push(this.typeToElement(link.type, link.href));
       }
-    });
+    }, this);
 
     return processedTextArray;
   },
+
+  typeToElement: function(type, src) {
+    if(type == 'image') {
+      return <EmbeddedImage src={src}/>;
+    } else {
+      return <Link href={src}/>;
+    }
+  },
+
 };
