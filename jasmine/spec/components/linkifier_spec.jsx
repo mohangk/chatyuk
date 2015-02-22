@@ -4,14 +4,34 @@ describe("EmbeddedImage", function() {
 
   describe('render', function() {
 
-    it('renders the linke that is set in the src property', function() {
-      var embeddedLinke = <EmbeddedImage src="http://fake.com/fake.png" />;
-      instance = TestUtils.renderIntoDocument(embeddedLinke);
+    it('renders the image that is set in the src property', function() {
+      var embeddedImage = <EmbeddedImage src="http://fake.com/fake.png" />;
+      instance = TestUtils.renderIntoDocument(embeddedImage);
       expect(instance.getDOMNode().getAttribute('src')).toEqual('http://fake.com/fake.png');
     });
 
   });
 });
+
+
+describe("Link", function() {
+  describe('render', function() {
+
+    it('renders the link that is set in the href property', function() {
+      var embeddedLink = <Link href="http://fake.com/awesome.html" />;
+      instance = TestUtils.renderIntoDocument(embeddedLink);
+      expect(instance.getDOMNode().getAttribute('href')).toEqual('http://fake.com/awesome.html');
+    });
+
+    it('opens link in a new tab', function() {
+      var embeddedLink = <Link href="http://fake.com/fake.png" />;
+      instance = TestUtils.renderIntoDocument(embeddedLink);
+      expect(instance.getDOMNode().getAttribute('target')).toEqual('_blank');
+    });
+
+  });
+
+})
 
 describe("Linkifier", function() {
   var linkifier = Object.create(Linkifier);
