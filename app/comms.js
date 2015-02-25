@@ -1,16 +1,4 @@
-//TODO
-// Super simple UI
-// Display roster
-// Presence (when people join or leave)
-// Prebinding
-//   -http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
-//
-// Join a room, creating one if it does not already exist (done)
-// Show room messages - from who, actual message (done)
-// Send a message (done)
-// Anonymous logins(done)
-
-var XmppComms = {
+module.exports =  {
 
   CHAT_SERVER:  'chatyuk.com',
   CONFERENCE_SERVER:  'conference.chatyuk.com',

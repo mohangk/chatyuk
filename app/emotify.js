@@ -1,15 +1,7 @@
-var Emoticon = React.createClass({
+var Emoticon = require('./components/emoticon.jsx');
+var emoji_map = require('./emoji_map.js');
 
-  backgroundImageStyle: function() {
-    return { backgroundImage: 'url("http://twemoji.maxcdn.com/svg/'+emoji_map[this.props.type]+'.svg")' };
-  },
-
-  render: function() {
-    return <i style={this.backgroundImageStyle()} className='twa' ></i>
-  }
-});
-
-var Emotify = {
+module.exports = {
 
   emoticons: {'>:)' :'smiling-imp',
               ':)'  :'smiley',

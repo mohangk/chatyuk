@@ -1,4 +1,4 @@
-var emoji_map = { 
+module.exports = { 
   "smile":      "1f604",
   "laughing":      "1f606",
   "blush":      "1f60a",

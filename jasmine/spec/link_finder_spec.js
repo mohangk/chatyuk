@@ -1,3 +1,5 @@
+var LinkFinder = require('../../app/link_finder.js');
+
 describe("LinkFinder", function() {
 
   describe('find', function() {

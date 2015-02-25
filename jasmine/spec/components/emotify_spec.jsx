@@ -1,3 +1,6 @@
+var Emoticon = require('../../../app/components/emoticon.jsx');
+var Emotify = require('../../../app/emotify.js');
+
 var TestUtils = React.addons.TestUtils;
 var instance;
 

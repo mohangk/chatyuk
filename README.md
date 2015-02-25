@@ -70,6 +70,29 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
 1. HTTPs ?
 
+
+## Development
+
+### Adding tests
+
+1. Add test file to jasmine/spec/ (plain JS objects) or jasmine/spec/components/ (for React components). 
+2. Add a require entry to the relevant spec file in jasmine/spec/suit.js, it should be automatically picked up by browserify and included in the specs.
+
+### Adding code
+
+1. Add code to ....
+
+
+### React.js component structure
+
+ - Chatbox
+  - MessagePane (done)
+   - Message (done)
+   - Message
+  - MessageBox
+  - Avatar
+    - LoginForm/LoggedInBox
+
 ## Notes
 
   - Parsing links from text - http://stackoverflow.com/questions/37684/how-to-replace-plain-urls-with-links

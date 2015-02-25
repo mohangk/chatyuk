@@ -1,3 +1,4 @@
+var XmppComms = require('../../app/comms.js');
 describe("XmppComms", function() {
 
   describe('#connect', function() {

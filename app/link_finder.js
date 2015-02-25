@@ -1,4 +1,4 @@
-LinkFinder = {
+module.exports = {
   find: function(text) {
     var links = linkify.find(text);
     return this.remapTypes(links);

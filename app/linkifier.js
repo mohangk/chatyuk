@@ -1,20 +1,8 @@
-var EmbeddedImage = React.createClass({
-  render: function() {
-    var style =  {
-      width: 292
-    };
+var LinkFinder = require('./link_finder.js');
+var Link = require('./components/link.jsx');
+var EmbeddedImage = require('./components/embedded_image.jsx');
 
-    return <img style={style} src={this.props.src} />
-  }
-});
-
-var Link = React.createClass({
-  render: function() {
-    return <a target='_blank' href={this.props.href}>{this.props.href}</a>
-  }
-});
-
-var Linkifier = {
+module.exports = {
 
   parse: function(textArray) {
 

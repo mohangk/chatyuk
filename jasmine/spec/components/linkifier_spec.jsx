@@ -1,4 +1,8 @@
 var TestUtils = React.addons.TestUtils;
+var EmbeddedImage = require('../../../app/components/embedded_image.jsx');
+var Link = require('../../../app/components/link.jsx');
+var Linkifier = require('../../../app/linkifier.js');
+var LinkFinder = require('../../../app/link_finder.js');
 
 describe("EmbeddedImage", function() {
 
