@@ -1,5 +1,6 @@
 var TestUtils = React.addons.TestUtils;
 var EmbeddedImage = require('../../../app/components/embedded_image.jsx');
+var EmbeddedYoutube = require('../../../app/components/embedded_youtube.jsx');
 var Link = require('../../../app/components/link.jsx');
 var Linkifier = require('../../../app/linkifier.js');
 var LinkFinder = require('../../../app/link_finder.js');
@@ -14,6 +15,28 @@ describe("EmbeddedImage", function() {
       expect(instance.getDOMNode().getAttribute('src')).toEqual('http://fake.com/fake.png');
     });
 
+  });
+});
+
+describe("EmbeddedYoutube", function() {
+
+  describe('render', function() {
+
+    it('renders the embedded youtube', function() {
+      var embeddedYoutube = <EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM" />;
+      instance = TestUtils.renderIntoDocument(embeddedYoutube);
+      expect(instance.getDOMNode().nodeName).toEqual('IFRAME');
+      expect(instance.getDOMNode().getAttribute('src')).toEqual('http://www.youtube.com/embed/bNT-CT25clM');
+    });
+
+  });
+
+  describe('toEmbedUrl', function () {
+    it('convert normal youtube url to embed url', function() {
+      var embeddedYoutube = <EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM" />;
+      instance = TestUtils.renderIntoDocument(embeddedYoutube);
+      expect(instance.toEmbedUrl()).toEqual('http://www.youtube.com/embed/bNT-CT25clM');
+    });
   });
 });
 
@@ -105,6 +128,7 @@ describe("Linkifier", function() {
 
       expect(linkifier.typeToElement('image','http://fake.com/fake2.png')).toEqual(<EmbeddedImage src="http://fake.com/fake2.png"/>);
       expect(linkifier.typeToElement('url','http://fake.com/awesome.html')).toEqual(<Link href="http://fake.com/awesome.html"/>);
+      expect(linkifier.typeToElement('youtube','http://www.youtube.com/watch?v=bNT-CT25clM')).toEqual(<EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM"/>);
 
     });
 

@@ -15,6 +15,8 @@ module.exports = {
   remapType: function(link) {
     if(this.isImageExt(link.href)) {
         link.type = 'image';
+    } else if (this.isYoutubeLink(link.href)) {
+        link.type = 'youtube';
     }
   },
 
@@ -22,6 +24,10 @@ module.exports = {
     var imageTypes = ['png', 'jpg', 'gif'];
     var ext = path.substring(path.length - 3).toLowerCase();
     return imageTypes.indexOf(ext) > -1;
+  },
+
+  isYoutubeLink: function(link) {
+    return link.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/) !== null;
   }
 
 };
