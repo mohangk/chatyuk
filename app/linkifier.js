@@ -1,6 +1,7 @@
 var LinkFinder = require('./link_finder.js');
 var Link = require('./components/link.jsx');
 var EmbeddedImage = require('./components/embedded_image.jsx');
+var EmbeddedVidio = require('./components/embedded_vidio.jsx');
 
 module.exports = {
 
@@ -74,6 +75,8 @@ module.exports = {
   typeToElement: function(type, src) {
     if(type == 'image') {
       return <EmbeddedImage src={src}/>;
+    } else if(type == 'vidio') {
+      return <EmbeddedVidio src={src}/>;
     } else {
       return <Link href={src}/>;
     }
