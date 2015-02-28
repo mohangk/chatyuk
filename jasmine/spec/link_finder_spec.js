@@ -37,11 +37,16 @@ describe("LinkFinder", function() {
         { href: "http://google.com/image.png",
           type: "url",
           value: "google.com/image.png"
+        },
+        { href: "http://vidio.com/watch/123-awesome",
+          type: "url",
+          value: "vidio.com/watch/123-awesome"
         }];
 
       var remapLinks = LinkFinder.remapTypes(links);
       expect(remapLinks[0].type).toEqual('url');
       expect(remapLinks[1].type).toEqual('image');
+      expect(remapLinks[2].type).toEqual('vidio');
 
     });
   });
@@ -59,6 +64,22 @@ describe("LinkFinder", function() {
     describe('when not an image type',function() {
       it('returns false', function() {
         expect(LinkFinder.isImageExt('fake_file.txt')).toEqual(false);
+      });
+    });
+  });
+
+  describe('isVidio', function() {
+    describe('when the passed in url that is vidio.com', function() {
+      it('returns true', function() {
+        var vidioUrl = 'http://vidio.com/watch/123-awesome';
+        expect(LinkFinder.isVidio(vidioUrl)).toEqual(true);
+      });
+    });
+
+    describe('when from vidio type',function() {
+      it('returns false', function() {
+        var vidioUrl = 'http://vidio.com/info/123-redasi';
+        expect(LinkFinder.isVidio(vidioUrl)).toEqual(false);
       });
     });
   });
