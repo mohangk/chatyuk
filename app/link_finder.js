@@ -17,6 +17,8 @@ module.exports = {
         link.type = 'image';
     } else if(this.isVidio(link.href)) {
         link.type = 'vidio';
+    } else if (this.isYoutubeLink(link.href)) {
+        link.type = 'youtube';
     }
   },
 
@@ -30,5 +32,9 @@ module.exports = {
     return path.search(/vidio.com\/watch/) != -1
            || path.search(/vidio.com\/embed/) != -1;
   },
+
+  isYoutubeLink: function(link) {
+    return link.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/) !== null;
+  }
 
 };

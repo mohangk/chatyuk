@@ -41,12 +41,18 @@ describe("LinkFinder", function() {
         { href: "http://vidio.com/watch/123-awesome",
           type: "url",
           value: "vidio.com/watch/123-awesome"
-        }];
+        },
+        { href: "http://www.youtube.com/watch?v=bNT-CT25clM",
+          type: "url",
+          value: "www.youtube.com/watch?v=bNT-CT25clM"
+        }
+      ];
 
       var remapLinks = LinkFinder.remapTypes(links);
       expect(remapLinks[0].type).toEqual('url');
       expect(remapLinks[1].type).toEqual('image');
       expect(remapLinks[2].type).toEqual('vidio');
+      expect(remapLinks[3].type).toEqual('youtube');
 
     });
   });
@@ -84,4 +90,19 @@ describe("LinkFinder", function() {
     });
   });
 
+  describe('isYoutubeLink', function(){
+    describe('when the passed in is youtube url', function() {
+      it('returns true', function() {
+        var youtubeUrl = 'http://www.youtube.com/watch?v=bNT-CT25clM';
+        expect(LinkFinder.isYoutubeLink(youtubeUrl)).toEqual(true);
+      });
+    });
+
+    describe('when not a youtube url',function() {
+      it('returns false', function() {
+        var fakeYoutubeUrl = 'http://www.mytube.com/watch?v=bNT-CT25clM';
+        expect(LinkFinder.isYoutubeLink(fakeYoutubeUrl)).toEqual(false);
+      });
+    });
+  });
 });

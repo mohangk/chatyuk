@@ -2,6 +2,7 @@ var LinkFinder = require('./link_finder.js');
 var Link = require('./components/link.jsx');
 var EmbeddedImage = require('./components/embedded_image.jsx');
 var EmbeddedVidio = require('./components/embedded_vidio.jsx');
+var EmbeddedYoutube = require('./components/embedded_youtube.jsx');
 
 module.exports = {
 
@@ -62,7 +63,7 @@ module.exports = {
     }
 
     textArray.forEach(function(element, index) {
-      processedTextArray.push(element);               
+      processedTextArray.push(element);
 
       if(index+1 < textArray.length) {
         processedTextArray.push(this.typeToElement(link.type, link.href));
@@ -77,6 +78,8 @@ module.exports = {
       return <EmbeddedImage src={src}/>;
     } else if(type == 'vidio') {
       return <EmbeddedVidio src={src}/>;
+    } else if(type == 'youtube') {
+      return <EmbeddedYoutube src={src}/>;
     } else {
       return <Link href={src}/>;
     }
