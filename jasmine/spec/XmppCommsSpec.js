@@ -1,9 +1,18 @@
-var XmppComms = require('../../app/comms.js');
+var Strophe = require('./support/mock_strophe.js')
+var proxyquire = require('proxyquireify')(require);
+var stubs = { 
+  './deps/strophe.js': Strophe,
+  './deps/strophe.muc.js': {}
+};
+
+var XmppComms = proxyquire('../../app/comms.js', stubs);
+
 describe("XmppComms", function() {
 
   describe('#connect', function() {
 
     it("sets the username, password, rooom", function() {
+
       var comms1 = Object.create(XmppComms);
       comms1.connect('fakeuser1', 'fakepass1', 'fakeroom1');
       expect(comms1.username).toBe('fakeuser1');

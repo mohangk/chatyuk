@@ -1,4 +1,4 @@
-StropheMuc = function() {
+var StropheMuc = function() {
   this.room = null;
   this.nick = null;
   this.onMessageCb = null;
@@ -17,7 +17,7 @@ StropheMuc.prototype = {
   }
 }
 
-Strophe = { boshService: null };
+var Strophe = { boshService: null };
 
 Strophe.Status = {
   CONNECTING: 0, 
@@ -41,3 +41,5 @@ Strophe.Connection.prototype = {
              return true
            },
 }
+
+module.exports = Strophe;

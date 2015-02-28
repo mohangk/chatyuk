@@ -5137,3 +5137,5 @@ Strophe.Websocket.prototype = {
         this._conn._onIdle.bind(this._conn)();
     }
 };
+
+module.exports = window.Strophe;

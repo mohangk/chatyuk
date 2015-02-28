@@ -3,12 +3,9 @@
   "version": "0.0.1",
   "description": "A fun embed-able multiuser chat room for fun and profit",
   "dependencies": {
-    "browserify": "^7.0.3",
-    "uglifyify": "^2.6.0",
-    "reactify": "^0.17.1"
   },
   "scripts": {
-    "build-tests": "watchify  -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
+    "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
     "build-components": "watchify  -e app/bootstrap.jsx -t reactify -o public/scripts/bundle.js --verbose"
   },
   "repository": {
@@ -24,6 +21,7 @@
   "devDependencies": {
     "browserify": "^7.1.0",
     "reactify": "^0.17.1",
-    "uglifyify": "^2.6.0"
+    "uglifyify": "^2.6.0",
+    "proxyquireify": "^1.2.2"
   }
 }

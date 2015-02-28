@@ -1,3 +1,7 @@
+var Strophe = require('./deps/strophe.js');
+require('./deps/strophe.muc.js');
+var $ = require('./deps/jquery.min.js');
+
 module.exports =  {
 
   CHAT_SERVER:  'chatyuk.com',
@@ -70,7 +74,7 @@ module.exports =  {
         sender = resource && Strophe.unescapeNode(resource) || '',
         delayed = $message.find('delay').length > 0,
         subject = $message.children('subject').text();
-    console.log(">> IN comms::onMessage callign this.onMessageCb", this.onMessageCb);
+    console.log(">> IN comms::onMessage calling this.onMessageCb", this.onMessageCb);
     this.onMessageCb({ body: body, sender: sender });
     console.log('IN comms::onMessage - return');
     return true;
