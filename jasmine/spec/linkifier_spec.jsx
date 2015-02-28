@@ -1,80 +1,13 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var EmbeddedImage = require('../../../app/components/embedded_image.jsx');
-var EmbeddedVidio = require('../../../app/components/embedded_vidio.jsx');
-var EmbeddedYoutube = require('../../../app/components/embedded_youtube.jsx');
+var EmbeddedImage = require('../../app/components/embedded_image.jsx');
+var EmbeddedVidio = require('../../app/components/embedded_vidio.jsx');
+var EmbeddedYoutube = require('../../app/components/embedded_youtube.jsx');
 
-var Link = require('../../../app/components/link.jsx');
-var Linkifier = require('../../../app/linkifier.js');
-var LinkFinder = require('../../../app/link_finder.js');
+var Link = require('../../app/components/link.jsx');
+var Linkifier = require('../../app/linkifier.js');
+var LinkFinder = require('../../app/link_finder.js');
 
-describe("EmbeddedImage", function() {
-
-  describe('render', function() {
-
-    it('renders the image that is set in the src property', function() {
-      var embeddedImage = <EmbeddedImage src="http://fake.com/fake.png" />;
-      instance = TestUtils.renderIntoDocument(embeddedImage);
-      expect(instance.getDOMNode().getAttribute('src')).toEqual('http://fake.com/fake.png');
-    });
-
-  });
-});
-
-describe("EmbeddedVidio", function() {
-
-  describe('render', function() {
-
-    it('renders the vidio that is set in the src property', function() {
-      var embeddedVidio = <EmbeddedVidio src="http://www.vidio.com/watch/33775-ganteng-ganteng-serigala-ep-310" />;
-      instance = TestUtils.renderIntoDocument(embeddedVidio);
-      expect(instance.getDOMNode().tagName).toEqual('IFRAME');
-      expect(instance.getDOMNode().getAttribute('src')).toEqual('http://www.vidio.com/embed/33775-ganteng-ganteng-serigala-ep-310');
-    });
-
-  });
-});
-
-describe("EmbeddedYoutube", function() {
-
-  describe('render', function() {
-
-    it('renders the embedded youtube', function() {
-      var embeddedYoutube = <EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM" />;
-      instance = TestUtils.renderIntoDocument(embeddedYoutube);
-      expect(instance.getDOMNode().nodeName).toEqual('IFRAME');
-      expect(instance.getDOMNode().getAttribute('src')).toEqual('http://www.youtube.com/embed/bNT-CT25clM');
-    });
-
-  });
-
-  describe('toEmbedUrl', function () {
-    it('convert normal youtube url to embed url', function() {
-      var embeddedYoutube = <EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM" />;
-      instance = TestUtils.renderIntoDocument(embeddedYoutube);
-      expect(instance.toEmbedUrl()).toEqual('http://www.youtube.com/embed/bNT-CT25clM');
-    });
-  });
-});
-
-describe("Link", function() {
-  describe('render', function() {
-
-    it('renders the link that is set in the href property', function() {
-      var embeddedLink = <Link href="http://fake.com/awesome.html" />;
-      instance = TestUtils.renderIntoDocument(embeddedLink);
-      expect(instance.getDOMNode().getAttribute('href')).toEqual('http://fake.com/awesome.html');
-    });
-
-    it('opens link in a new tab', function() {
-      var embeddedLink = <Link href="http://fake.com/fake.png" />;
-      instance = TestUtils.renderIntoDocument(embeddedLink);
-      expect(instance.getDOMNode().getAttribute('target')).toEqual('_blank');
-    });
-
-  });
-
-})
 
 describe("Linkifier", function() {
   var linkifier = Object.create(Linkifier);

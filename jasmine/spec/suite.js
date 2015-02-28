@@ -1,5 +1,11 @@
-require("./components/emotify_spec.jsx");
-require("./components/linkifier_spec.jsx");
-require("./components/chat_components_spec.jsx");
+require("./emotify_spec.jsx");
+require("./linkifier_spec.jsx");
 require("./link_finder_spec.js");
-require("./XmppCommsSpec.js");
+require("./comms_spec.js");
+require("./components/message_spec.jsx");
+require("./components/embedded_image_spec.jsx");
+require("./components/embedded_youtube_spec.jsx");
+require("./components/embedded_vidio_spec.jsx");
+require("./components/link_spec.jsx");
+require("./components/loggedin_box_spec.jsx");
+require("./components/login_form_spec.jsx");
