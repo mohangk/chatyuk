@@ -41,16 +41,16 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 ## Features
 
 1. Has basic emoticon support
+2. Detects urls and embeds 
+  - images and gifs
+  - youtube videos
+  - vidio videos
+  into chat window.
 
 ## Todo
 
-1. Add ability to send 
-  - emoticons (done)
-  - images (done)
-  - gifs (done)
-  - youtube videos
-  - vidio videos
 1. Add in page mode (a-la twitch or cliponyu)
+1. Remove jQuery dependence in comms.js
 1. Remove hardcoded domain names from both client and server configurations
 1. Add sample on how to embed chatyuk on existing page
 1. Refactor current stylesheets - either move everything to React components or leave in stylesheet or halhway house ? 
@@ -60,12 +60,11 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
   - auto login to room
   - control rooms from server
 1. Websocket support
+1. Deps management - Use browserify-shim for strophe and linkifyjs. Stop changing code for strophe. 
 1. Emoji/Image picker
 1. Add ability to set chat room name in chat window
-1. Browserify or jspm.io & karma
 1. When I am chatting, although scrolled up, scroll the chat window down
 1. Add the "More chats below" ala Twitch
-1. Remove jQuery dependence in comms.js
 1. Figure out best way to handle customization => themes, emoticons 
 1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
 1. HTTPs ?
