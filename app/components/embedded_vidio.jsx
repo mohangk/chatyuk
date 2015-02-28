@@ -1,3 +1,4 @@
+var React = require('react');
 var EmbeddedVidio = React.createClass({
   render: function() {
     var style =  {

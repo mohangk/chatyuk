@@ -1,3 +1,4 @@
+var React  = require('react');
 var EmbeddedImage = React.createClass({
   render: function() {
     var style =  {

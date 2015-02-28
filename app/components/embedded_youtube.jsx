@@ -1,3 +1,4 @@
+var React = require('react');
 var EmbeddedYoutube = React.createClass({
 
   render: function() {

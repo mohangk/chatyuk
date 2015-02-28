@@ -1,3 +1,4 @@
+var React  = require('react');
 var MessageBox = React.createClass({
   sendMessage: function(e) {
     if(e.which == 13) {

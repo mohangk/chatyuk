@@ -1,3 +1,4 @@
+var React = require('react');
 var LinkFinder = require('./link_finder.js');
 var Link = require('./components/link.jsx');
 var EmbeddedImage = require('./components/embedded_image.jsx');

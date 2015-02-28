@@ -1,3 +1,4 @@
+var React  = require('react');
 var Emotify = require('../emotify.js');
 var Linkifier = require('../linkifier.js');
 

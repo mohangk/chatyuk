@@ -1,3 +1,4 @@
+var React  = require('react');
 var Message = require('./message.jsx');
 var MessagePane = React.createClass({
   componentDidMount: function() {

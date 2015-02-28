@@ -1,3 +1,4 @@
+var React  = require('react/addons');
 var Emoticon = require('../../../app/components/emoticon.jsx');
 var Emotify = require('../../../app/emotify.js');
 

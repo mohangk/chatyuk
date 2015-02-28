@@ -1,3 +1,4 @@
+var React = require('react');
 var Emoticon = require('./components/emoticon.jsx');
 var emoji_map = require('./emoji_map.js');
 

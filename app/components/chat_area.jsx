@@ -1,3 +1,4 @@
+var React  = require('react');
 var ChatBox = require('./chat_box.jsx');
 var MessagePane = require('./message_pane.jsx');
 var LoggedInBox = require('./logged_in_box.jsx');

@@ -1,3 +1,4 @@
+var React  = require('react');
 var LoginForm = React.createClass({
   doLogin: function(e) {
     e.preventDefault();

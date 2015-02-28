@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A fun embed-able multiuser chat room for fun and profit",
   "dependencies": {
+    "react": "^0.12"
   },
   "scripts": {
     "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
