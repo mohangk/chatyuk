@@ -1,5 +1,6 @@
 var React  = require('react');
-var emoji_map = require('../emoji_map.js');
+
+var emoji_map = require('../../message_formatters/emoji_map.js');
 
 var Emoticon = React.createClass({
 

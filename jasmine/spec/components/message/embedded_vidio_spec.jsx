@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var EmbeddedVidio = require('../../../app/components/embedded_vidio.jsx');
+var EmbeddedVidio = require('../../../../app/components/message/embedded_vidio.jsx');
 
 describe("EmbeddedVidio", function() {
 

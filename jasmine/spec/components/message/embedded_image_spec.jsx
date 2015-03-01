@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var EmbeddedImage = require('../../../app/components/embedded_image.jsx');
+var EmbeddedImage = require('../../../../app/components/message/embedded_image.jsx');
 
 describe("EmbeddedImage", function() {
 

@@ -1,4 +1,4 @@
-var LinkFinder = require('../../app/link_finder.js');
+var LinkFinder = require('../../../app/message_formatters/link_finder.js');
 
 describe("LinkFinder", function() {
 

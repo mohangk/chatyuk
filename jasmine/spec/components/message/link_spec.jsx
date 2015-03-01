@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var Link = require('../../../app/components/link.jsx');
+var Link = require('../../../../app/components/message/link.jsx');
 
 describe("Link", function() {
   describe('render', function() {

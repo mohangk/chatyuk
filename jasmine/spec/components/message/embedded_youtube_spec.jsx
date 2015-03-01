@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var EmbeddedYoutube = require('../../../app/components/embedded_youtube.jsx');
+var EmbeddedYoutube = require('../../../../app/components/message/embedded_youtube.jsx');
 
 describe("EmbeddedYoutube", function() {
 

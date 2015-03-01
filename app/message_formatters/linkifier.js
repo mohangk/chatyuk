@@ -1,9 +1,11 @@
 var React = require('react');
+
 var LinkFinder = require('./link_finder.js');
-var Link = require('./components/link.jsx');
-var EmbeddedImage = require('./components/embedded_image.jsx');
-var EmbeddedVidio = require('./components/embedded_vidio.jsx');
-var EmbeddedYoutube = require('./components/embedded_youtube.jsx');
+
+var Link = require('../components/message/link.jsx');
+var EmbeddedImage = require('../components/message/embedded_image.jsx');
+var EmbeddedVidio = require('../components/message/embedded_vidio.jsx');
+var EmbeddedYoutube = require('../components/message/embedded_youtube.jsx');
 
 module.exports = {
 

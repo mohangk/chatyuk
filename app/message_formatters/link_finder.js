@@ -1,4 +1,4 @@
-require('./deps/linkify.js');
+require('../deps/linkify.js');
 module.exports = {
   find: function(text) {
     var links = linkify.find(text);

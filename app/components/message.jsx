@@ -1,6 +1,6 @@
 var React  = require('react');
-var Emotify = require('../emotify.js');
-var Linkifier = require('../linkifier.js');
+var Emotify = require('../message_formatters/emotify.js');
+var Linkifier = require('../message_formatters/linkifier.js');
 
 var emotify = Object.create(Emotify);
 var linkifier = Object.create(Linkifier);

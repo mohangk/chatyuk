@@ -1,12 +1,12 @@
 var React  = require('react/addons');
 var TestUtils = React.addons.TestUtils;
-var EmbeddedImage = require('../../app/components/embedded_image.jsx');
-var EmbeddedVidio = require('../../app/components/embedded_vidio.jsx');
-var EmbeddedYoutube = require('../../app/components/embedded_youtube.jsx');
+var EmbeddedImage = require('../../../app/components/message/embedded_image.jsx');
+var EmbeddedVidio = require('../../../app/components/message/embedded_vidio.jsx');
+var EmbeddedYoutube = require('../../../app/components/message/embedded_youtube.jsx');
+var Link = require('../../../app/components/message/link.jsx');
 
-var Link = require('../../app/components/link.jsx');
-var Linkifier = require('../../app/linkifier.js');
-var LinkFinder = require('../../app/link_finder.js');
+var Linkifier = require('../../../app/message_formatters/linkifier.js');
+var LinkFinder = require('../../../app/message_formatters/link_finder.js');
 
 
 describe("Linkifier", function() {

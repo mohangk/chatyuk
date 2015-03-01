@@ -1,5 +1,7 @@
 var React = require('react');
-var Emoticon = require('./components/emoticon.jsx');
+
+var Emoticon = require('../components/message/emoticon.jsx');
+
 var emoji_map = require('./emoji_map.js');
 
 module.exports = {

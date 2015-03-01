@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var Message = require('../../../app/components/message.jsx');
-var Emoticon = require('../../../app/components/emoticon.jsx');
+var Emoticon = require('../../../app/components/message/emoticon.jsx');
 
 var instance;
 var TestUtils = React.addons.TestUtils;
