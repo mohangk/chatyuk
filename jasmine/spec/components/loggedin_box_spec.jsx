@@ -1,6 +1,6 @@
 var React  = require('react/addons');
 var Message = require('../../../app/components/message.jsx');
-var Emoticon = require('../../../app/components/emoticon.jsx');
+var Emoticon = require('../../../app/components/message/emoticon.jsx');
 var LoggedInBox = require('../../../app/components/logged_in_box.jsx');
 var LoginForm = require('../../../app/components/login_form.jsx');
 
