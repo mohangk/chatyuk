@@ -50,6 +50,7 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 ## Todo
 
 1. Add in page mode (a-la twitch or cliponyu)
+1. Figure out if using browserify for the main Chatyuk object will be a hinderance when integrating with websites that also use some form of modules
 1. Remove jQuery dependence in comms.js
 1. Remove hardcoded domain names from both client and server configurations
 1. Add sample on how to embed chatyuk on existing page
@@ -74,23 +75,25 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 
 ### Adding tests
 
-1. Add test file to jasmine/spec/ (plain JS objects) or jasmine/spec/components/ (for React components). 
-2. Add a require entry to the relevant spec file in jasmine/spec/suit.js, it should be automatically picked up by browserify and included in the specs.
+1. Code should be acompanied with tests.
+1. Add test file to jasmine/spec/ as per the structure of the actual code in the app folder. For e.g. tests for app/comms.js go into  jasmine/spec/comms_spec.js, tests for app/components/message.jsx go into jasmine/spec/components/message_spec.jsx
+1. Add a require entry to the relevant spec file in jasmine/spec/suite.js, it should be automatically picked up by browserify and included in the specs.
 
 ### Adding code
 
-1. Add code to ....
+1. General code goes into app/
+1. Add all UI related components into app/components.
+1. Create directories to keep commmon files together.
 
 
 ### React.js component structure
 
  - Chatbox
-  - MessagePane (done)
-   - Message (done)
+  - MessagePane
    - Message
+   - Message
+  - LoginForm/LoggedInBox
   - MessageBox
-  - Avatar
-    - LoginForm/LoggedInBox
 
 ## Notes
 
