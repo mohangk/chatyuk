@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
-    "build-components": "watchify  -e app/bootstrap.jsx -t reactify -o public/scripts/bundle.js --verbose"
+    "build-components": "watchify  -e app/chatyuk.jsx -t reactify -o public/scripts/bundle.js --verbose"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,5 @@
 require("./comms_spec.js");
+require("./chatyuk_spec.js");
 
 require("./message_formatters/emotify_spec.jsx");
 require("./message_formatters/linkifier_spec.jsx");

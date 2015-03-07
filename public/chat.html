@@ -7,7 +7,17 @@
   </head>
 
   <body>
+    <div id="chatarea" style="
+        border:  1px solid black;
+        width: 25%;
+        height: 100%;
+        float: right;
+    "></div>
     <script type="text/javascript" src="scripts/bundle.js"></script>
+    <script type="text/javascript">
+      var chatyuk = Object.create(Chatyuk);
+      chatyuk.init(document.querySelector('#chatarea'), {display_mode: 'inpage'});
+    </script>
   </body>
 
 </html>
