@@ -292,13 +292,7 @@
   user-select: none;
 }
 #chatyuk {
-  bottom: 0;
   direction: ltr;
-  height: 25px;
-  left: 0;
-  position: fixed;
-  right: 0;
-  z-index: 30;
   display: block;
   box-sizing: border-box;
   -moz-box-sizing: border-box;

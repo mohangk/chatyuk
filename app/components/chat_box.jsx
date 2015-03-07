@@ -63,6 +63,15 @@ var ChatBox = React.createClass({
     var chatRoomStyle = {
       display: (!this.state.minimized ? 'block' : 'none')
     }
+
+    var onPageStyle = {
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 25
+    }
+
     var dragResizeStyle = {
       position: 'absolute',
       width: 200,
@@ -87,7 +96,7 @@ var ChatBox = React.createClass({
     }
 
     return (
-         <div id="chatyuk">
+         <div id="chatyuk" style={onPageStyle}>
          <a href="#" onClick={this.maximize}  style={controlBoxStyle} id="toggle-controlbox" className="toggle-controlbox"><span className="conn-feedback">Toggle chat</span> </a>
          <div style={chatRoomStyle} className="chatroom">
            <div className="box-flyout" style={boxFlyoutStyle} >
@@ -98,10 +107,10 @@ var ChatBox = React.createClass({
                 <p className="chatroom-topic"></p>
             </div>
              <div className="chat-body" >
-             <div className="chat-area">
-             {this.props.children}
+               <div className="chat-area">
+               {this.props.children}
+               </div>
              </div>
-           </div>
          </div>
        </div>
        </div>

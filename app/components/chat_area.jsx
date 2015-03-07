@@ -31,24 +31,53 @@ var ChatArea = React.createClass({
     this.setState({loggedIn: false, username: null, room: null})
   },
 
-  render: function() {
+  renderOnPage: function() {
+   if(this.props.comms.isConnected()) { 
+     return (
+       <ChatBox>
+         <MessagePane comms={this.props.comms} />
+         <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
+         <MessageBox comms={this.props.comms} />
+       </ChatBox>
+     );
+   } else {
+     return (
+      <ChatBox>
+        <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" />
+      </ChatBox>
+     );
+   }
+  },
+
+  renderInPage: function() {
 
     if(this.props.comms.isConnected()) { 
       return (
-        <ChatBox>
+    <div id="chatyuk">
+     <div className="chat-body" >
+       <div className="chat-area">
           <MessagePane comms={this.props.comms} />
           <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
           <MessageBox comms={this.props.comms} />
-        </ChatBox>
+        </div>
+        </div>
+      </div>
       );
     } else {
       return (
-        <ChatBox>
          <LoginForm loggedInAs={this.loggedInAs} username="test" room="testroom" />
-        </ChatBox>
       );
     }
+  },
+
+  render: function() {
+    if(this.props.config.display_mode == 'inpage') {
+      return this.renderInPage();
+    } else {
+      return this.renderOnPage();
+    }
   }
+
 });
 
 module.exports = ChatArea;
