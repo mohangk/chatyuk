@@ -1,4 +1,5 @@
 var React  = require('react');
+var ChatBoxHead = require('./chat_box_head.jsx');
 var ChatBox = require('./chat_box.jsx');
 var MessagePane = require('./message_pane.jsx');
 var LoggedInBox = require('./logged_in_box.jsx');
@@ -54,6 +55,7 @@ var ChatArea = React.createClass({
     if(this.props.comms.isConnected()) { 
       return (
     <div id="chatyuk">
+     <ChatBoxHead />
      <div className="chat-body" >
        <div className="chat-area">
           <MessagePane comms={this.props.comms} />

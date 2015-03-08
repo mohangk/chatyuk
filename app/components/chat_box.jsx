@@ -1,4 +1,5 @@
 var React  = require('react');
+var ChatBoxHead = require('./chat_box_head.jsx');
 var ChatBox = React.createClass({
   
   getInitialState: function() {
@@ -101,11 +102,7 @@ var ChatBox = React.createClass({
          <div style={chatRoomStyle} className="chatroom">
            <div className="box-flyout" style={boxFlyoutStyle} >
              <div className="dragresize dragresize-tm" onMouseDown={this.dragStart} style={dragResizeStyle}></div>
-             <div className="chat-head chat-head-chatroom">
-                <a onClick={this.minimize} className="toggle-chatbox-button icon-minus"></a>
-                <div className="chat-title"> Chatroom </div>
-                <p className="chatroom-topic"></p>
-            </div>
+             <ChatBoxHead onMinimize={this.minimize} />
              <div className="chat-body" >
                <div className="chat-area">
                {this.props.children}

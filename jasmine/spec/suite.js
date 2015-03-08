@@ -9,6 +9,7 @@ require("./components/loggedin_box_spec.jsx");
 require("./components/login_form_spec.jsx");
 require("./components/message_spec.jsx");
 require("./components/chat_area_spec.jsx");
+require("./components/chat_box_head_spec.jsx");
 
 require("./components/message/embedded_image_spec.jsx");
 require("./components/message/embedded_youtube_spec.jsx");
