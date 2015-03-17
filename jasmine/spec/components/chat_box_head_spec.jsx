@@ -7,7 +7,7 @@ var TestUtils = React.addons.TestUtils;
 describe("ChatBoxHead", function() {
   describe('minimizeButton', function() {
     describe('when onMinimize prop is set', function() {
-      it('adds the close link that has a click event attache ot onMinimize', function() {
+      it('adds the close link that is attached to onMinimize', function() {
         var minimizeEventHandlerSpy = jasmine.createSpy('minimizeEventHandler');
         instance = TestUtils.renderIntoDocument(<ChatBoxHead onMinimize={minimizeEventHandlerSpy} />);
         var minimizeButton = instance.refs.minimizeButton.getDOMNode();
@@ -18,12 +18,12 @@ describe("ChatBoxHead", function() {
     });
 
     describe('when onMinimize prop is not set', function(){
-            
-      it('does not add anyting', function() {
+
+      it('does not add the minimizeButton', function() {
         instance = TestUtils.renderIntoDocument(<ChatBoxHead />);
         expect(instance.refs.minimizeButton).toBeUndefined();
       });
-            
+
     });
 
 
@@ -31,7 +31,7 @@ describe("ChatBoxHead", function() {
 
   describe('render', function(){
 
-    it('calls minimizeButton', function() {
+    it('renders a minimizeButton', function() {
       var minimizeButtonSpy = jasmineReact.spyOnClass(ChatBoxHead, "minimizeButton").and.returnValue(<div/>);
       instance = TestUtils.renderIntoDocument(<ChatBoxHead />);
       expect(minimizeButtonSpy).toHaveBeenCalled();

@@ -1,34 +1,43 @@
 var React  = require('react/addons');
 var ChatArea = require('../../../app/components/chat_area.jsx');
+var OnPageChatBox = require('../../../app/components/on_page_chat_box.jsx');
+var InPageChatBox = require('../../../app/components/in_page_chat_box.jsx');
 
 var instance;
 var TestUtils = React.addons.TestUtils;
 
+var commsStub = {isConnected: function() {false} };
 describe("ChatArea", function() {
-  describe('render', function(){ 
-    var commsStub = null;
 
-    beforeEach(function() {
-      commsStub = {isConnected: function() {false} };
-    });
-
+  describe('chatBoxClass', function(){
     describe('when config.display_mode is set to "inpage"', function(){
-      it('renders the inpage version of the ChatArea', function() {
-        var renderInPageSpy = jasmineReact.spyOnClass(ChatArea, "renderInPage").and.returnValue(<div/>);
+      it('returns InPageChatBox', function() {
         var config = { display_mode: 'inpage'};
         instance = TestUtils.renderIntoDocument(<ChatArea comms={commsStub} config={config} />);
-        expect(renderInPageSpy).toHaveBeenCalled();
+        expect(instance.chatBoxClass()).toEqual(InPageChatBox);
       });
     });
 
     describe('when config.display_mode is set to "onpage"', function(){
       it('renders the onpage version of the ChatArea', function() {
-
-        var renderOnPageSpy = jasmineReact.spyOnClass(ChatArea, "renderOnPage").and.returnValue(<div/>);
         var config = { display_mode: 'onpage'};
         instance = TestUtils.renderIntoDocument(<ChatArea comms={commsStub} config={config} />);
-        expect(renderOnPageSpy).toHaveBeenCalled();
+        expect(instance.chatBoxClass()).toEqual(OnPageChatBox);
       });
+    });
+  });
+
+  describe('render',function() {
+    it('renders the type returned chatBoxClass', function() {
+      var chatBoxClassSpy = jasmineReact.spyOnClass(ChatArea,'chatBoxClass').and.returnValue(OnPageChatBox);
+
+      instance = TestUtils.renderIntoDocument(<ChatArea comms={commsStub} />);
+      expect(TestUtils.findRenderedComponentWithType(instance, OnPageChatBox)).toBeDefined();
+      
+      chatBoxClassSpy.and.returnValue(InPageChatBox);
+
+      instance = TestUtils.renderIntoDocument(<ChatArea comms={commsStub} />);
+      expect(TestUtils.findRenderedComponentWithType(instance, InPageChatBox)).toBeDefined();
     });
   });
 

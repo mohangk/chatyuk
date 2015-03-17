@@ -71,6 +71,7 @@ config accepts the following keys
 1. Figure out if using browserify for the main Chatyuk object will be a hinderance when integrating with websites that also use some form of modules
 1. Add acceptance testing using nightwatch.js
   - http://www.slideshare.net/sethmcl/join-the-darkside-nightwatchjs
+1. Add sample on how to embed chatyuk on existing page
 1. Improve default style 
   - Scrollbar in chat window is ugly
   - Vidio embed is not sized correctly
@@ -79,7 +80,6 @@ config accepts the following keys
 1. Remove hardcoded domain names from both client and server configurations
 1. Fix bug with rejoining rooms. converse.js had the same issue and they fixed it be removing strophe.muc.js, yikes
   - https://github.com/jcbrand/converse.js/issues/307
-1. Add sample on how to embed chatyuk on existing page
 1. Implement sample server code to create a pre-bound session
   - Prebinding and security - http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
   - auto login to room
