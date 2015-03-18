@@ -9,9 +9,9 @@ var LoginForm = React.createClass({
   render: function() {
       return (<form  onSubmit={this.doLogin}>
         <label htmlFor='username'>Username:</label>
-        <input type='text' ref='username' defaultValue={this.props.username}/>
+        <input type='text' name='username' ref='username' defaultValue={this.props.username}/>
         <label htmlFor='room'>Room:</label>
-        <input type='text' ref='room' defaultValue={this.props.room}/>
+        <input type='text' name='room' ref='room' defaultValue={this.props.room}/>
         <input type='submit' value='Join!'/>
       </form> )
   }
