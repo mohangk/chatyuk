@@ -12,6 +12,19 @@
   font-weight: normal;
   font-style: normal;
 }
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#chatyuk {
+  font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+}
+
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 #chatyuk [data-icon]:before {
   font-family: 'Converse-js';
@@ -367,7 +380,6 @@
   font-weight: 700;
 }
 #chatyuk,
-#chatyuk input,
 #chatyuk textarea {
   font-size: 14px;
   color: #4f4f4f;
@@ -577,10 +589,6 @@
 #chatyuk .chatroom div.participants label {
   font-style: italic;
 }
-#chatyuk .chatroom label {
-  margin-left: 2px;
-  font-size: 12px;
-}
 #chatyuk .chatroom .invited-contact {
   margin: 0;
   width: 99px;
@@ -720,33 +728,6 @@
   color: #76797C;
   font-size: 90%;
   font-weight: normal;
-}
-#chatyuk .chat-head .avatar {
-  float: left;
-  margin-right: 6px;
-}
-#chatyuk .restore-chat,
-#chatyuk .chat-title {
-  padding: 1px 0;
-  color: white;
-  font-weight: bold;
-  line-height: 15px;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: rgba(0, 0, 0, 0.51) 0 -1px 0;
-}
-#chatyuk .chat-title a {
-  color: white;
-  width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-#chatyuk .chat-head-chatbox,
-#chatyuk .chat-head-chatroom {
-  height: 35px;
-  position: relative;
 }
 #chatyuk p.user-custom-message,
 #chatyuk p.chatroom-topic {

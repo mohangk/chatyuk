@@ -1,4 +1,33 @@
 var React  = require('react');
+
+var styles = {
+  head: {
+    margin:                   '-1px -1px 0',
+
+    background:               '#4e69a2',
+
+    color:                    'white',
+    fontSize:                 12,
+    fontWeight:               'bold',
+    textShadow:               '0 -1px rgba(0, 0, 0, .25)',
+
+    border:                   '1px solid #2e4588',
+    borderBottom:             'none',
+
+    borderTopLeftRadius:      3,
+    borderTopRightRadius:     3,
+
+    cursor:                   'pointer'
+  },
+
+  title: {
+    margin:                   5,
+    fontSize:                 12
+  }
+
+};
+
+
 var ChatBoxHead = React.createClass({
 
   minimizeButton: function() {
@@ -13,10 +42,9 @@ var ChatBoxHead = React.createClass({
 
   render: function() {
     return (
-      <div className="chat-head chat-head-chatroom">
+      <div style={styles.head} className="chat-head chat-head-chatroom">
         { this.minimizeButton() }
-        <div className="chat-title"> Chatroom </div>
-        <p className="chatroom-topic"></p>
+        <div style={styles.title} className="chat-title">Chatroom</div>
       </div>
     );
   }
