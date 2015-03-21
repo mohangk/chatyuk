@@ -826,4 +826,4 @@ module.exports = {
   "womens":      "1f6ba",
   "x":      "274c",
   "zero":    "30-20e3",
-}
+};

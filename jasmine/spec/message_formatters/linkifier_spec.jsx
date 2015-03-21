@@ -5,8 +5,9 @@ var EmbeddedVidio = require('../../../app/components/message/embedded_vidio.jsx'
 var EmbeddedYoutube = require('../../../app/components/message/embedded_youtube.jsx');
 var Link = require('../../../app/components/message/link.jsx');
 
-var Linkifier = require('../../../app/message_formatters/linkifier.js');
+var Linkifier = require('../../../app/message_formatters/linkifier.jsx');
 var LinkFinder = require('../../../app/message_formatters/link_finder.js');
+
 
 
 describe("Linkifier", function() {

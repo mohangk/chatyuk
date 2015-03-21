@@ -1,5 +1,10 @@
+/* global document */
+
+"use strict";
+
 var React  = require('react');
 var ChatBoxHead = require('./chat_box_head.jsx');
+
 var ChatBox = React.createClass({
   
   getInitialState: function() {
@@ -41,17 +46,17 @@ var ChatBox = React.createClass({
   },
 
   onMouseMove: function (e) {
-    if (!this.state.dragging) return
+    if (!this.state.dragging) return;
     this.updateHeight(e, true);
   },
 
   componentDidUpdate: function (props, state) {
     if (this.state.dragging && !state.dragging) {
-      document.addEventListener('mousemove', this.onMouseMove)
-      document.addEventListener('mouseup', this.onMouseUp)
+      document.addEventListener('mousemove', this.onMouseMove);
+      document.addEventListener('mouseup', this.onMouseUp);
     } else if (!this.state.dragging && state.dragging) {
-      document.removeEventListener('mousemove', this.onMouseMove)
-      document.removeEventListener('mouseup', this.onMouseUp)
+      document.removeEventListener('mousemove', this.onMouseMove);
+      document.removeEventListener('mouseup', this.onMouseUp);
     }
   },
 
@@ -59,11 +64,11 @@ var ChatBox = React.createClass({
 
     var controlBoxStyle = {
       display: (this.state.minimized ? 'block' : 'none')
-    }
+    };
 
     var chatRoomStyle = {
       display: (!this.state.minimized ? 'block' : 'none')
-    }
+    };
 
     var onPageStyle = {
       position: 'fixed',
@@ -71,7 +76,7 @@ var ChatBox = React.createClass({
       left: 0,
       right: 0,
       height: 25
-    }
+    };
 
     var dragResizeStyle = {
       position: 'absolute',
@@ -83,7 +88,7 @@ var ChatBox = React.createClass({
       marginLeft: 0,
       cursor: 'n-resize',
       zIndex: 20
-    }
+    };
 
     var boxFlyoutStyle = {
       borderRadius: 4,
@@ -94,7 +99,7 @@ var ChatBox = React.createClass({
       bottom: 5,
       width: 300,
       marginLeft: 0
-    }
+    };
 
     return (
          <div id="chatyuk" style={onPageStyle}>

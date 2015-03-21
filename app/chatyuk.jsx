@@ -1,3 +1,7 @@
+/* global window */
+
+"use strict";
+
 var React = require('react');
 var XmppComms = require('./comms.js');
 var ChatArea = require('./components/chat_area.jsx');
@@ -28,7 +32,7 @@ var Chatyuk = {
       parentEl
     );
   }
-}
+};
 
 window.Chatyuk = Chatyuk;
 

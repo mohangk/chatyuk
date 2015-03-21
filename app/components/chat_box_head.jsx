@@ -1,3 +1,5 @@
+"use strict";
+
 var React  = require('react');
 
 var styles = {
@@ -34,7 +36,7 @@ var ChatBoxHead = React.createClass({
     var minimizeButton =  '';
 
     if(this.props.onMinimize) { 
-      var minimizeButton = <a ref="minimizeButton" onClick={this.props.onMinimize} className="toggle-chatbox-button icon-minus"></a>;
+      minimizeButton = <a ref="minimizeButton" onClick={this.props.onMinimize} className="toggle-chatbox-button icon-minus"></a>;
     }
 
     return minimizeButton;

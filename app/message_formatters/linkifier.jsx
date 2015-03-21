@@ -1,3 +1,5 @@
+"use strict";
+
 var React = require('react');
 
 var LinkFinder = require('./link_finder.js');
@@ -12,11 +14,11 @@ module.exports = {
   parse: function(textArray) {
 
     textArray.forEach(function(text, index) {
-      if(typeof text != 'string') { return; };
+      if(typeof text != 'string') { return; }
 
       var links = LinkFinder.find(text);
 
-      if(links.length == 0) { return; };
+      if(links.length === 0) { return; }
 
       var processedTextArray = this.replaceLinks(links, text);
       this.spliceTextArray(textArray, index, processedTextArray);
@@ -40,7 +42,7 @@ module.exports = {
   tokenizeTextArray: function(link, textArray) {
 
     textArray.forEach(function(text, index) {
-      if(typeof text != 'string') { return; };
+      if(typeof text != 'string') { return; }
 
       var processedTextArray = this.tokenize(link, text);
       this.spliceTextArray(textArray, index, processedTextArray);

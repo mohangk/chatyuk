@@ -1,7 +1,13 @@
+/* global window */
+
+"use strict";
+
 require('../deps/linkify.js');
+
 module.exports = {
+
   find: function(text) {
-    var links = linkify.find(text);
+    var links = window.linkify.find(text);
     return this.remapTypes(links);
   },
 
@@ -30,8 +36,8 @@ module.exports = {
   },
 
   isVidio: function(path) {
-    return path.search(/vidio.com\/watch/) != -1
-           || path.search(/vidio.com\/embed/) != -1;
+    return (path.search(/vidio.com\/watch/) != -1) ||
+           (path.search(/vidio.com\/embed/) != -1);
   },
 
   isYoutubeLink: function(link) {

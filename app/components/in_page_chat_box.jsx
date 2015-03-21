@@ -1,5 +1,8 @@
+"use strict";
+
 var React  = require('react');
 var ChatBoxHead = require('./chat_box_head.jsx');
+
 var InPageChatBox = React.createClass({
 
   render: function() {

@@ -1,7 +1,7 @@
+"use strict";
+
 var React = require('react');
-
-var Emoticon = require('../components/message/emoticon.jsx');
-
+var Emoticon = require('./../components/message/emoticon.jsx');
 var emoji_map = require('./emoji_map.js');
 
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
   tokenizeTextArray: function(emoticon, type, textArray) {
 
     textArray.forEach(function(text, index) {
-      if(typeof text != 'string') { return; };
+      if(typeof text != 'string') { return; }
 
       var processedTextArray = this.tokenize(emoticon, type, text);
       this.spliceTextArray(textArray, index, processedTextArray);

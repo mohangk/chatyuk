@@ -1,6 +1,8 @@
+"use strict";
+
 var React  = require('react');
-var Emotify = require('../message_formatters/emotify.js');
-var Linkifier = require('../message_formatters/linkifier.js');
+var Emotify = require('../message_formatters/emotify.jsx');
+var Linkifier = require('../message_formatters/linkifier.jsx');
 
 var emotify = Object.create(Emotify);
 var linkifier = Object.create(Linkifier);
@@ -12,7 +14,7 @@ var Message = React.createClass({
   },
 
   formatBody: function(text) {
-    if(text == '' || typeof text == 'undefined') {
+    if(text === '' || typeof text === 'undefined') {
       return '';
     }
     

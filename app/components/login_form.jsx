@@ -1,3 +1,5 @@
+"use strict";
+
 var React  = require('react');
 var m      = require('./../utils/merge');
 
@@ -44,6 +46,7 @@ var LoginForm = React.createClass({
         </form>
       );
   }
+
 });
 
 module.exports = LoginForm;

@@ -15,17 +15,35 @@
   "bugs": {
     "url": "https://github.com/mohangk/chatyuk/issues"
   },
-  "license": "ISC",
+  "license": "BSD",
   "author": "",
+  "homepage": "https://github.com/mohangk/chatyuk",
+  "bugs": {
+    "url": "https://github.com/mohangk/chatyuk/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mohangk/chatyuk.git"
   },
+
   "devDependencies": {
     "browserify": "^7.1.0",
     "nightwatch": "^0.5.36",
     "proxyquireify": "^1.2.2",
     "reactify": "^0.17.1",
-    "uglifyify": "^2.6.0"
+    "uglifyify": "^2.6.0",
+    "jsxhint": "^0.12.1"
+  },
+
+  "scripts": {
+    "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
+    "build-components": "watchify  -e app/chatyuk.jsx -t reactify -o public/scripts/bundle.js --verbose",
+    "nightwatch": "./node_modules/nightwatch/bin/nightwatch",
+    "jshint": "./node_modules/jsxhint/cli.js app/* app/**/* '!app/deps/**/*'"
+  },
+
+  "jshintConfig": {
+    "node": true,
+    "globalstrict": true
   }
 }

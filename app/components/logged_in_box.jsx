@@ -1,4 +1,7 @@
+"use strict";
+
 var React  = require('react');
+
 var LoggedInBox = React.createClass({
   render: function() {
     return (

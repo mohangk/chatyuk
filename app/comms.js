@@ -1,6 +1,8 @@
+"use strict";
+
 var Strophe = require('./deps/strophe.js');
-require('./deps/strophe.muc.js');
-var $ = require('./deps/jquery.min.js');
+              require('./deps/strophe.muc.js');
+var $ =       require('./deps/jquery.min.js');
 
 module.exports =  {
 
@@ -41,7 +43,7 @@ module.exports =  {
       this.onDisconnectedCb = onDisconnectedCb;
     //}
 
-    if(onMessageCb != null || typeof(onMessageCb) != 'undefined') {
+    if(onMessageCb !== null || typeof(onMessageCb) != 'undefined') {
       this.onMessageCb = onMessageCb;
     }
 
@@ -55,12 +57,11 @@ module.exports =  {
   },
 
   disconnect: function() {
-    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect() }.bind(this));
+    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect(); }.bind(this));
   },
 
-  log: function()
-  {
-    console.log('IN CB', arguments)
+  log: function() {
+    console.log('IN CB', arguments);
     return true;
   },
 
@@ -121,7 +122,7 @@ module.exports =  {
 
   jid: function() {
     //if password is blank we assume this is an anonymous login
-    if(this.password == '') {
+    if(this.password === '') {
       return this.CHAT_SERVER;
     } else {
       return this.username+'@'+this.CHAT_SERVER;
@@ -140,4 +141,4 @@ module.exports =  {
     this.connection.muc.groupchat(this.roomAndServer(), message);
   }
 
-}
+};

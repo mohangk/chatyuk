@@ -1,3 +1,5 @@
+"use strict";
+
 var React  = require('react');
 var ChatBoxHead = require('./chat_box_head.jsx');
 var OnPageChatBox = require('./on_page_chat_box.jsx');
@@ -30,7 +32,7 @@ var ChatArea = React.createClass({
 
   logout: function() {
     this.props.comms.disconnect();
-    this.setState({loggedIn: false, username: null, room: null})
+    this.setState({ loggedIn: false, username: null, room: null });
   },
 
   chatBoxClass: function() {

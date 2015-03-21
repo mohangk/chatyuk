@@ -1,13 +1,16 @@
+"use strict";
+
 var React  = require('react');
 var Message = require('./message.jsx');
+
 var MessagePane = React.createClass({
   componentDidMount: function() {
     this.props.comms.setOnMessageCb(this.addMessage);
   },
 
   getInitialState: function() {
-    var messages = []
-    if(typeof(this.props.messages) != 'undefined') {
+    var messages = [];
+    if(typeof this.props.messages != 'undefined') {
       messages = this.props.messages;
     }
     return {
@@ -23,7 +26,7 @@ var MessagePane = React.createClass({
   componentDidUpdate: function() {
     if (this.shouldScrollBottom) {
       var node = this.getDOMNode();
-      node.scrollTop = node.scrollHeight
+      node.scrollTop = node.scrollHeight;
     }
   },
 
@@ -38,7 +41,7 @@ var MessagePane = React.createClass({
 
       return (
         <Message sender={message.sender} body={message.body} key={index} />
-      )
+      );
     });
 
     return (
