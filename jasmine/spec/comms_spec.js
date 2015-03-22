@@ -62,6 +62,45 @@ describe("XmppComms", function() {
 
   });
 
+  describe('#onMessage', function() {
+    var onMessageCb,
+        comms;
+
+    var message = null,
+        body = "Don't Tell 'Em",
+        sender = 'sillylogger';
+
+    beforeEach(function() {
+      onMessageCb = jasmine.createSpy('onMessageCb');
+
+      comms = Object.create(XmppComms);
+      comms.setOnMessageCb(onMessageCb);
+    });
+
+    it('parses the message and passes that to the onMessageCb', function() {
+      var data = `<message  xmlns="jabber:client"
+                            type="groupchat"
+                            to="aaf868ec-d5d1-43e9-ab9a-20662abd8d52@chatyuk.com/84e99860-e518-4f63-be89-4c9a11c2bdaa"
+                            from="vip@conference.chatyuk.com/${sender}"
+                            id="1">
+                    <body>${body}</body>
+                    <x xmlns="jabber:x:event">
+                      <composing/>
+                    </x>
+                  </message>`;
+
+      message = new DOMParser().parseFromString(data, "text/xml").documentElement;
+
+      comms.onMessage(message);
+      expect(onMessageCb).toHaveBeenCalled();
+
+      var args = onMessageCb.calls.mostRecent().args[0];
+      expect(args.body).toEqual(body);
+      expect(args.sender).toEqual(sender);
+    });
+
+  });
+
   describe('#roomAndServer', function() {
     it('combines generates the room JID',function() {
       var comms = Object.create(XmppComms);

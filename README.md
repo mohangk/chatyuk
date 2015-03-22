@@ -76,7 +76,6 @@ config accepts the following keys
   - Scrollbar in chat window is ugly
   - Vidio embed is not sized correctly
   - Removed unused CSS in chatyuk.css file
-1. Remove jQuery dependence in comms.js
 1. Remove hardcoded domain names from both client and server configurations
 1. Fix bug with rejoining rooms. converse.js had the same issue and they fixed it be removing strophe.muc.js, yikes
   - https://github.com/jcbrand/converse.js/issues/307
