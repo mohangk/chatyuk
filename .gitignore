@@ -2,6 +2,7 @@
 .DS_Store
 .module-cache
 node_modules
+.bundle.js
 
 # Leave out compiled files
 
