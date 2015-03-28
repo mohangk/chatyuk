@@ -37,6 +37,7 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
 1. Run `npm run-script build-tests` to continuosly build the tests.
 2. In the root directory run `python -m SimpleHTTPServer`
 3. Access the tests at http://localhost:8000/jasmine/SpecRunner.html
+4. To run the acceptance tests `npm run nightwatch`
 
 ## Integrating into a page
 
@@ -53,8 +54,6 @@ config accepts the following keys
     - 'onpage', the chat window floats on an existing page
     - 'inpage', the chat window is embedded into the page
 
-
-
 ## Features
 
 1. Has basic emoticon support
@@ -64,34 +63,46 @@ config accepts the following keys
   - vidio videos
   - links into clickable links
   into chat window.
+3. Has different display modes
+  - in page - embed the chat window into a particular div on your page
+  - on page - a floating window that can be minimised a-la FB chat that can be easily added to any page
 
 ## Todo
 
-1. Add in page mode (a-la twitch or cliponyu)
+1. Logout if I reload the page or close the tab - ask for user confirmation ?
 1. Figure out if using browserify for the main Chatyuk object will be a hinderance when integrating with websites that also use some form of modules
-1. Add acceptance testing using nightwatch.js
-  - http://www.slideshare.net/sethmcl/join-the-darkside-nightwatchjs
+1. Create a script that will run both jasmine and acceptance test headless so that we can run it on a CI
 1. Add sample on how to embed chatyuk on existing page
 1. Improve default style 
   - Scrollbar in chat window is ugly
-  - Vidio embed is not sized correctly
+  - On Firefox when display_mode = 'inpage', the messagepane is not expanded
   - Removed unused CSS in chatyuk.css file
 1. Remove hardcoded domain names from both client and server configurations
-1. Fix bug with rejoining rooms. converse.js had the same issue and they fixed it be removing strophe.muc.js, yikes
-  - https://github.com/jcbrand/converse.js/issues/307
-1. Implement sample server code to create a pre-bound session
-  - Prebinding and security - http://metajack.im/2009/12/14/fastest-xmpp-sessions-with-http-prebinding/
-  - auto login to room
-  - control rooms from server
+1. Websocket support
+1. Fix bug with rejoining rooms without logging out. 
+  - store the auth sessions in a cookie on the browser so that users can resume after reloading page
+  - converse.js had the same issue and they fixed it be removing strophe.muc.js, yikes
+    - https://github.com/jcbrand/converse.js/issues/307
+1. Implement sample server code to create a pre-bound session and integrate with comms.js
+  - Ruby lib to create prebound sessions
+    - https://github.com/skyfallsin/ruby_bosh
+  - Django example
+    - http://metajack.im/2008/10/03/getting-attached-to-strophe/
+  - Example of client connecting to prebound session 
+    - https://github.com/node-xmpp/node-xmpp-client/blob/master/examples/prebind.js
+    - https://github.com/strophe/strophejs/blob/master/examples/prebind.html
+  - End obj - auto login to room based on auth from the server
+1. Disable the ability for clients to connect apart from getting a prebound connection from the server
+1. Admin controls
+  - control rooms from server, valid rooms vs auto created rooms
 1. Refactor current stylesheets - either move everything to React components or leave in stylesheet or halhway house ? 
 1. Display roster
-1. Presence (when people join or leave)
+1. UI elements for presence (when people join or leave)
 1. How would we set certain users as admins ?
   - Identify them in the roster
   - Give them the ability to ban users 
 1. Automatically kick abusive users out of rooms
-1. Websocket support
-1. Deps management - Use browserify-shim for strophe and linkifyjs. Stop changing code for strophe. 
+1. Deps management - Use browserify-shim for strophe and linkifyjs. Stop changing code for strophe.
 1. Emoji/Image picker
 1. Add ability to set chat room name in chat window
 1. When I am chatting, although scrolled up, scroll the chat window down
@@ -99,13 +110,15 @@ config accepts the following keys
 1. Figure out best way to handle customization => themes, emoticons 
 1. There is a DDOS vulnerability with LuaExpat 1.2 that ships with 14.04
 1. HTTPs ?
-
+1. Error handling for cases where the server sends back an error when you try to send a message
+    - comms.js in onMessage, if there is an error the messageBody will be undefined as the body element is not in the response. 
 
 ## Development
 
 ### Adding tests
 
 1. Code should be acompanied with tests.
+1. If it is a new user facing feature, add an acceptance test to tests/acceptance as well.
 1. Add test file to jasmine/spec/ as per the structure of the actual code in the app folder. For e.g. tests for app/comms.js go into  jasmine/spec/comms_spec.js, tests for app/components/message.jsx go into jasmine/spec/components/message_spec.jsx
 1. Add a require entry to the relevant spec file in jasmine/spec/suite.js, it should be automatically picked up by browserify and included in the specs.
 
@@ -115,11 +128,14 @@ config accepts the following keys
 1. General code goes into app/
 1. Add all UI related components into app/components.
 1. Create directories to keep commmon files together.
+1. Always use strict mode. Add "use strict"; to the top of your js or jsx files.
+1. Ensure both your code and tests pass jshint by running `npm run jshint` before committing.
 
 
 ### React.js component structure
 
- - Chatbox
+ - Chatbox (InPageChatbox, OnPageChatbox)
+  - ChatBoxHead
   - MessagePane
    - Message
    - Message
