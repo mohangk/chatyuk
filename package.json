@@ -2,28 +2,21 @@
   "name": "chatyuk",
   "version": "0.0.1",
   "description": "A fun embed-able multiuser chat room for fun and profit",
-  "dependencies": {
-    "react": "^0.12",
-    "object.assign": "1.1.1"
-  },
-  "scripts": {
-    "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
-    "build-components": "watchify  -e app/chatyuk.jsx -t reactify -o public/scripts/bundle.js --verbose",
-    "nightwatch": "./node_modules/nightwatch/bin/nightwatch"
-  },
   "homepage": "https://github.com/mohangk/chatyuk",
   "bugs": {
     "url": "https://github.com/mohangk/chatyuk/issues"
   },
   "license": "BSD",
   "author": "",
-  "homepage": "https://github.com/mohangk/chatyuk",
-  "bugs": {
-    "url": "https://github.com/mohangk/chatyuk/issues"
-  },
+
   "repository": {
     "type": "git",
     "url": "https://github.com/mohangk/chatyuk.git"
+  },
+
+  "dependencies": {
+    "react": "^0.12",
+    "object.assign": "1.1.1"
   },
 
   "devDependencies": {
@@ -36,10 +29,10 @@
   },
 
   "scripts": {
-    "build-tests": "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js -t reactify -o jasmine/spec/bundle.js --verbose",
-    "build-components": "watchify  -e app/chatyuk.jsx -t reactify -o public/scripts/bundle.js --verbose",
-    "nightwatch": "./node_modules/nightwatch/bin/nightwatch",
-    "jshint": "./node_modules/jsxhint/cli.js app/* app/**/* '!app/deps/**/*'"
+    "build-tests":      "watchify -p proxyquireify/plugin -e jasmine/spec/suite.js  -t reactify -o jasmine/spec/bundle.js   --verbose",
+    "build-components": "watchify                         -e app/chatyuk.jsx        -t reactify -o public/scripts/bundle.js --verbose",
+    "nightwatch":       "./node_modules/nightwatch/bin/nightwatch",
+    "jshint":           "./node_modules/jsxhint/cli.js app/* app/**/* '!app/deps/**/*'"
   },
 
   "jshintConfig": {
