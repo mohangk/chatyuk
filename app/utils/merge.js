@@ -1,3 +1,5 @@
+"use strict";
+
 var assign = Object.assign || require('object.assign');
 
 var merge = function() {
@@ -8,7 +10,7 @@ var merge = function() {
     }
   }
   return res;
-}
+};
 
 module.exports = merge;
 

@@ -10,7 +10,7 @@ var styles = {
 
     width:        '100%',
   }
-}
+};
 
 styles.inputText = m(styles.input, {
     height:       '30px',
