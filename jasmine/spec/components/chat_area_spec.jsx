@@ -8,6 +8,15 @@ var TestUtils = React.addons.TestUtils;
 
 var commsStub = {isConnected: function() {false} };
 describe("ChatArea", function() {
+  describe('componentDidMount', function() {
+
+    it('registers this.updateState as onConnected and onDisconnected callbacks ', function() {
+      //var updateStateSpy = jasmineReact.spyOnClass(ChatArea,'updateState');
+      var registerCallbacksSpy = spyOn(commsStub, 'registerCallbacks');
+      instance = TestUtils.renderIntoDocument(<ChatArea comms={commsStub} config={{}} />);
+      expect(registerCallbacksSpy).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
+    });
+  });
 
   describe('chatBoxClass', function(){
     describe('when config.display_mode is set to "inpage"', function(){

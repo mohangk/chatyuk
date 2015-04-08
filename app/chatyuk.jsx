@@ -15,6 +15,7 @@ var Chatyuk = {
   },
 
   init: function(parentEl, config) {
+    comms.init();
     this.initConfig(config);
     this.renderComponent(parentEl);
   },

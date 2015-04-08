@@ -35,6 +35,10 @@ var ChatArea = React.createClass({
     this.setState({ loggedIn: false, username: null, room: null });
   },
 
+  componentDidMount: function(){
+    this.props.comms.registerCallbacks(this.updateState, this.updateState);
+  },
+
   chatBoxClass: function() {
     if(this.props.config.display_mode == 'inpage') {
       return InPageChatBox;

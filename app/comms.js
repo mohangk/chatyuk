@@ -16,41 +16,48 @@ module.exports =  {
   onDisconnectedCb: null,
   onMessageCb: null,
 
-  boshServiceUrl: function() {
-    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
-  },
-
-  connect: function(username, password, room, onConnectedCb, onDisconnectedCb, onMessageCb) {
-
-    if (this.connection === null) {
+  init: function() {
+    if(this.connection === null){
       this.connection = new Strophe.Connection(this.boshServiceUrl());
       this.connection.rawInput = this.rawInput;
       this.connection.rawOutput = this.rawOutput;
     } else {
       this.connection.reset();
     }
+  },
 
+  registerCallbacks: function(onConnectedCb, onDisconnectedCb, onMessageCb) {
+
+    if(this.isCallbackSet(onConnectedCb)) {
+      this.onConnectedCb = onConnectedCb;
+    }
+
+    if(this.isCallbackSet(onDisconnectedCb)) {
+      this.onDisconnectedCb = onDisconnectedCb;
+    }
+
+    if(this.isCallbackSet(onMessageCb)) {
+      this.onMessageCb = onMessageCb;
+    }
+  },
+
+  isCallbackSet: function(cb) {
+    return (cb !== null && typeof(cb) != 'undefined');
+  },
+
+  connect: function(username, password, room) {
 
     this.username = username;
     this.password = password;
     this.room = room;
-    // if(typeof(onConnectedCb) != 'undefined') {
-      this.onConnectedCb = onConnectedCb;
-    //}
-
-    // if(typeof(onDisconnectedCb) != 'undefined') {
-      this.onDisconnectedCb = onDisconnectedCb;
-    //}
-
-    if(onMessageCb !== null || typeof(onMessageCb) != 'undefined') {
-      this.onMessageCb = onMessageCb;
-    }
-
     this.connection.connect(this.jid(),
                        this.password,
                        this.onServerConnect.bind(this));
   },
 
+  boshServiceUrl: function() {
+    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
+  },
   setOnMessageCb: function(onMessageCb) {
     this.onMessageCb = onMessageCb;
   },
@@ -93,29 +100,29 @@ module.exports =  {
     this.currentStatus =  status;
     if (status == Strophe.Status.CONNECTING) {
       console.log('Strophe is connecting.');
-    } 
+    }
     else if (status == Strophe.Status.CONNFAIL) {
       console.log('Strophe failed to connect.');
-      if(typeof(this.onDisconnectedCb) != 'undefined') {
+      if(this.isCallbackSet(this.onDisconnectedCb)) {
         this.onDisconnectedCb();
       }
-    } 
+    }
     else if (status == Strophe.Status.DISCONNECTING) {
       console.log('Strophe is disconnecting.');
-    } 
+    }
     else if (status == Strophe.Status.DISCONNECTED) {
       console.log('Strophe is disconnected.');
-      if(typeof(this.onDisconnectedCb) != 'undefined') {
+      if(this.isCallbackSet(this.onDisconnectedCb)) {
         this.onDisconnectedCb();
       }
-    } 
-    else if (status == Strophe.Status.CONNECTED) {
+    }
+    else if (status == Strophe.Status.CONNECTED || status == Strophe.Status.ATTACHED) {
       console.log('Strophe is connected.');
-      if(typeof(this.onConnectedCb) != 'undefined') {
+      if(this.isCallbackSet(this.onConnectedCb)) {
         this.onConnectedCb();
       }
       console.log(">> IN comms::onServerConnnect - set this.onMesage");
-      
+
       this.connection.muc.join(this.roomAndServer(), this.username, this.onMessage.bind(this), this.log, this.log);
     }
   },

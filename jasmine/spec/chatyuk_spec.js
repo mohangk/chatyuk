@@ -1,12 +1,12 @@
 var proxyquire = require('proxyquireify')(require);
 var React = require('react');
-var Comms = require('../../app/comms.js');
 var ChatArea = require('../../app/components/chat_area.jsx');
 
+var FakeComms = jasmine.createSpyObj('fake_comms', ['init', 'isConnected', 'registerCallbacks']);
 
 var stubs = { 
   'react': React,
-  './comms.js': Comms,
+  './comms.js': FakeComms,'@noCallThru': true,
   './components/chat_area.jsx': ChatArea,
 };
 
@@ -39,6 +39,13 @@ describe('Chatyuk',function() {
       chatyuk = Object.create(Chatyuk);
       renderComponentSpy = spyOn(chatyuk, 'renderComponent');
       initConfigSpy = spyOn(chatyuk, 'initConfig');
+    });
+
+    it('initializes the comms object', function() {
+
+      chatyuk.init('fakeParentEl', 'fakeConfig');
+      expect(FakeComms.init).toHaveBeenCalled();
+
     });
 
     it('calls initConfig with the passed in config', function() {
@@ -89,12 +96,14 @@ describe('Chatyuk',function() {
       renderSpy = spyOn(React, 'render');
       createElementSpy = spyOn(React, 'createElement');
       chatyuk.config =  {display_mode: 'inpage'};
+
       chatyuk.renderComponent(testDiv);
     
       var actualProps = createElementSpy.calls.first().args[1];
-      var expectedProps = {comms: {}, config: {display_mode: 'inpage'}};
+      var expectedProps = {comms: FakeComms, config: {display_mode: 'inpage'}};
       
-      expect(actualProps).toEqual(expectedProps);
+      expect(actualProps.config).toEqual(expectedProps.config);
+      expect(actualProps.comms.__proto__).toEqual(expectedProps.comms);
     });
   });
 });

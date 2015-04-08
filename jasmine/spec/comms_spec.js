@@ -9,71 +9,90 @@ var XmppComms = proxyquire('../../app/comms.js', stubs);
 
 describe("XmppComms", function() {
 
-  describe('#connect', function() {
+  var comms;
 
-    it("sets the username, password, rooom", function() {
+  beforeEach(function() {
+    comms = Object.create(XmppComms);
+  });
 
-      var comms1 = Object.create(XmppComms);
-      comms1.connect('fakeuser1', 'fakepass1', 'fakeroom1');
-      expect(comms1.username).toBe('fakeuser1');
-      expect(comms1.password).toBe('fakepass1');
-      expect(comms1.room).toBe('fakeroom1');
+  describe('#init', function() {
+    describe('when the connection does not exist',function() {
+      it('initializes it', function() {
+        expect(comms.connection).toBeNull();
+        comms.init();
+        expect(comms.connection.connect).toBeDefined();
+      });
 
-      var comms2 = Object.create(XmppComms); 
-      comms2.connect('fakeuser2', 'fakepass2', 'fakeroom2');
-      expect(comms2.username).toBe('fakeuser2');
-      expect(comms2.password).toBe('fakepass2');
-      expect(comms2.room).toBe('fakeroom2');
+      it('sets boshservice', function() {
+        comms.init();
+        expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
+      });
     });
 
+    describe('when the connection exists',function() {
+      it('resets it', function() {
+        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['reset']);
+        comms.connection = fakeConnectionSpy;
+        comms.init();
+        expect(fakeConnectionSpy.reset).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#registerCallbacks', function() {
+
     it('sets the onConnected, onDisconnected and onMessage callbacks', function() {
-      var comms = Object.create(XmppComms);
       var onConnectedSpy = jasmine.createSpy('onConnectedSpy');
       var onDisconnectedSpy = jasmine.createSpy('onDisconnectedSpy');
       var onMessageSpy = jasmine.createSpy('onMessageSpy');
 
-      comms.connect('fakeuser', 'fakepass', 'fakeroom', onConnectedSpy, onDisconnectedSpy, onMessageSpy);
+      comms.registerCallbacks(onConnectedSpy, onDisconnectedSpy, onMessageSpy);
       expect(comms.onConnectedCb).toBe(onConnectedSpy);
       expect(comms.onDisconnectedCb).toBe(onDisconnectedSpy);
       expect(comms.onMessageCb).toBe(onMessageSpy);
     });
+  });
 
-    describe('Strophe setup', function(){
-      it('sets boshservice, jid and password', function() {
-        var comms = Object.create(XmppComms);
+  describe('#connect', function() {
+    beforeEach(function() {
+      comms.init();
+    });
+
+    it("sets the username, password, rooom", function() {
+      comms.connect('fakeuser1', 'fakepass1', 'fakeroom1');
+      expect(comms.username).toBe('fakeuser1');
+      expect(comms.password).toBe('fakepass1');
+      expect(comms.room).toBe('fakeroom1');
+    });
+
+
+    describe('establishes a connection', function(){
+      it('sets jid and password on the connection object', function() {
         comms.connect('fakeuser', 'fakepass', 'fakeroom');
-        expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
         expect(comms.connection.jid).toBe(comms.jid());
         expect(comms.connection.password).toBe(comms.password);
       });
 
-      it('sets the onServerConnect callback',function() {
-        var comms = Object.create(XmppComms);
+      it('sets the onServerConnect callback on the connection object',function() {
         spyOn(comms, 'onServerConnect');
         comms.connect('fakeuser', 'fakepass', 'fakeroom');
-        //we call it because that we can check if the spy was actually passed in and called, we can check the function directly because it was wrapped in a `bind` call
+        //we call comms.connection.onConnectCb and check if the callback, onServerConnect was called
+        //we cannot check the function directly because it was wrapped in a `bind` call
         comms.connection.onConnectCb();
         expect(comms.onServerConnect).toHaveBeenCalled();
-        // expect(comms.connection.onDisconnectedCb).toBe(comms.onConnect);
       })
-
     });
-
-
   });
 
   describe('#onMessage', function() {
-    var onMessageCb,
-        comms;
+    var onMessageCb;
 
-    var message = null,
-        body = "Don't Tell 'Em",
-        sender = 'sillylogger';
+    var message = null;
+    var body = "Don't Tell 'Em";
+    var sender = 'sillylogger';
 
     beforeEach(function() {
       onMessageCb = jasmine.createSpy('onMessageCb');
-
-      comms = Object.create(XmppComms);
       comms.setOnMessageCb(onMessageCb);
     });
 
@@ -104,6 +123,7 @@ describe("XmppComms", function() {
   describe('#roomAndServer', function() {
     it('combines generates the room JID',function() {
       var comms = Object.create(XmppComms);
+      comms.init();
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.roomAndServer()).toBe('fakeroom@'+XmppComms.CONFERENCE_SERVER);
     })
@@ -112,16 +132,19 @@ describe("XmppComms", function() {
   describe('currentStatus', function() {
     it('is null by default',function() {
       var comms = Object.create(XmppComms);
+      comms.init();
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.currentStatus).toBe(null);
     })
   });
 
   describe('#isConnected', function(){
+    beforeEach(function() {
+      comms.init();
+      comms.connect('fakeuser', 'fakepass', 'fakeroom');
+    });
     describe('when currentStatus is CONNECTED', function() {
       it('returns true', function() {
-        var comms = Object.create(XmppComms);
-        comms.connect('fakeuser', 'fakepass', 'fakeroom');
         comms.onServerConnect(Strophe.Status.CONNECTED);
         expect(comms.isConnected()).toBe(true);
       });
@@ -129,8 +152,6 @@ describe("XmppComms", function() {
 
     describe('for all other states', function() {
       it('returns false', function() {
-        var comms = Object.create(XmppComms);
-        comms.connect('fakeuser', 'fakepass', 'fakeroom');
         expect(comms.isConnected()).toBe(false);
         comms.onServerConnect(Strophe.Status.CONNECTING);
         expect(comms.isConnected()).toBe(false);
@@ -141,10 +162,9 @@ describe("XmppComms", function() {
   });
 
   describe('#onServerConnect', function() {
-    var comms;
 
     beforeEach(function(){
-      comms = Object.create(XmppComms);
+      comms.init();
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
     });
 
