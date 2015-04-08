@@ -11,3 +11,9 @@ public/scripts/components
 
 # Leave out compiled bundles
 bundle.js
+
+# from nightwatch
+tests/reports/*
+
+
+npm-debug.log
