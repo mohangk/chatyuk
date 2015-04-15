@@ -57,6 +57,14 @@ describe("XmppComms", function() {
     });
   });
 
+  describe('#setServerConfig', function() {
+    it('assigns CHAT_SERVER and CONFERENCE_SERVER', function() {
+      XmppComms.setServerConfig('example.com', 'conference.example.com');
+      expect(XmppComms.CHAT_SERVER).toEqual('example.com');
+      expect(XmppComms.CONFERENCE_SERVER).toEqual('conference.example.com');
+    })
+  });
+
   describe('#registerCallbacks', function() {
 
     it('sets the onConnected, onDisconnected and onMessage callbacks', function() {

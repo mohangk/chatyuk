@@ -11,12 +11,15 @@ var comms = Object.create(XmppComms);
 var Chatyuk = {
 
   defaultConfig: {
-    display_mode: 'inpage'
+    display_mode: 'inpage',
+    chat_server: 'chatyuk.com',
+    conference_server: 'conference.chatyuk.com'
   },
 
   init: function(parentEl, config) {
-    comms.init();
     this.initConfig(config);
+
+    comms.init();
     this.renderComponent(parentEl);
   },
 
@@ -25,6 +28,8 @@ var Chatyuk = {
     for (var attrname in customConfig) { 
       this.config[attrname] = customConfig[attrname]; 
     }
+
+    comms.setServerConfig(this.config.chat_server, this.config.conference_server);
   },
 
   renderComponent: function(parentEl) {
