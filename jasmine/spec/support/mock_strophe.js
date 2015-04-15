@@ -43,8 +43,20 @@ Strophe.Connection.prototype = {
              this.jid = jid;
              this.password = password;
              this.onConnectCb = onConnectCb;
+             //Based on https://github.com/jcbrand/converse.js/blob/master/converse.js#L565
+             this._proto = {};
+             this._proto.sid = 'fakesid-123123';
+             this._proto.rid = 999;
              return true
            },
+
+  attach: function(jid, sid, rid, onConnectCb) {
+
+
+  },
+
+  reset: function() {}
+
 }
 
 module.exports = Strophe;

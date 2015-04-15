@@ -1,8 +1,18 @@
-var Strophe = require('./support/mock_strophe.js')
 var proxyquire = require('proxyquireify')(require);
+
+var fakeCookies = {
+  store: {},
+  setItem: function(k,v) { this.store[k] = v; },
+  getItem: function(k) { return this.store[k]; },
+  hasItem: function(k) { return this.store[k] !== undefined; }
+};
+
+var Strophe = require('./support/mock_strophe.js');
+
 var stubs = { 
   './deps/strophe.js': Strophe,
-  './deps/strophe.muc.js': {}
+  './deps/strophe.muc.js': {},
+  './utils/cookies.js': fakeCookies,
 };
 
 var XmppComms = proxyquire('../../app/comms.js', stubs);
@@ -13,9 +23,16 @@ describe("XmppComms", function() {
 
   beforeEach(function() {
     comms = Object.create(XmppComms);
+    fakeCookies.store = {};
   });
 
   describe('#init', function() {
+    it('tries to restore existing sessions', function() {
+      spyOn(comms,'restoreSession')
+      comms.init();
+      expect(comms.restoreSession).toHaveBeenCalled();
+    })
+
     describe('when the connection does not exist',function() {
       it('initializes it', function() {
         expect(comms.connection).toBeNull();
@@ -27,11 +44,12 @@ describe("XmppComms", function() {
         comms.init();
         expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
       });
+
     });
 
     describe('when the connection exists',function() {
       it('resets it', function() {
-        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['reset']);
+        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
         comms.connection = fakeConnectionSpy;
         comms.init();
         expect(fakeConnectionSpy.reset).toHaveBeenCalled();
@@ -84,6 +102,62 @@ describe("XmppComms", function() {
     });
   });
 
+
+  describe('#saveSession', function() {
+    it('stores the jid, sid, rid, username, room into cookie', function() {
+      comms.init();
+
+      cookieSpy = spyOn(fakeCookies,'setItem');
+      comms.connect('fakeuser', 'fakepass', 'fakeroom');
+      comms.saveSession();
+      //the rid, sid values are hardcoded in mock-strophe
+      expect(cookieSpy.calls.allArgs()).toEqual(
+        [
+          ['chatyuk_user', 'fakeuser'],
+          ['chatyuk_room', 'fakeroom'], 
+          ['chatyuk_sid', 'fakesid-123123'],
+          ['chatyuk_rid', 999]
+        ]);
+    });
+
+  });
+
+  describe('#restoreSession', function() {
+    describe('when there was no prior session', function() {
+      it('does not try to attach', function() {
+        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
+        comms.connection = fakeConnectionSpy;
+        spyOn(comms,'hasPriorSession').and.returnValue(false);
+        comms.init();
+        expect(fakeConnectionSpy.attach).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when there was a prior session', function() {
+      beforeEach(function() {
+        fakeCookies.setItem('chatyuk_user', 'fakeuser');
+        fakeCookies.setItem('chatyuk_room', 'fakeroom');
+        fakeCookies.setItem('chatyuk_sid', 's123');
+        fakeCookies.setItem('chatyuk_rid', 123);
+      });
+
+      it('sets username, room based on the values from the saved session', function() {
+        comms.init();
+
+        expect(comms.username).toEqual('fakeuser');
+        expect(comms.room).toEqual('fakeroom');
+      });
+
+      it('calls connection attach with the right values');
+
+      describe('when attach fails',function() {
+        it('destroys reference to prior session')
+      })
+    });
+
+
+  });
+
   describe('#onMessage', function() {
     var onMessageCb;
 
@@ -93,6 +167,7 @@ describe("XmppComms", function() {
 
     beforeEach(function() {
       onMessageCb = jasmine.createSpy('onMessageCb');
+      comms.init()
       comms.setOnMessageCb(onMessageCb);
     });
 
@@ -146,6 +221,13 @@ describe("XmppComms", function() {
     describe('when currentStatus is CONNECTED', function() {
       it('returns true', function() {
         comms.onServerConnect(Strophe.Status.CONNECTED);
+        expect(comms.isConnected()).toBe(true);
+      });
+    });
+
+    describe('when currentStatus is ATTACHED', function() {
+      it('returns true', function() {
+        comms.onServerConnect(Strophe.Status.ATTACHED);
         expect(comms.isConnected()).toBe(true);
       });
     });

@@ -31,12 +31,26 @@ var ChatArea = React.createClass({
   },
 
   logout: function() {
-    this.props.comms.disconnect();
+    if(this.props.comms.isConnected()) {
+      console.log("logging out!!");
+      this.props.comms.disconnect();
+    }
     this.setState({ loggedIn: false, username: null, room: null });
   },
 
+  unloading: function() {
+    if(this.props.comms.isConnected()) {
+      this.props.comms.saveSession();
+    }
+  },
+
   componentDidMount: function(){
+    window.addEventListener('unload', this.unloading);
     this.props.comms.registerCallbacks(this.updateState, this.updateState);
+  },
+
+  componentWillUnmount: function(){
+    window.removeEventListener('unload', this.unloading);
   },
 
   chatBoxClass: function() {
@@ -51,7 +65,7 @@ var ChatArea = React.createClass({
   render: function() {
     var ChatBox = this.chatBoxClass();
 
-    if(this.props. comms.isConnected()) { 
+    if(this.props.comms.isConnected()) { 
       return (
       <ChatBox>
         <MessagePane comms={this.props.comms} />

@@ -72,6 +72,7 @@ config accepts the following keys
 1. Logout if I reload the page or close the tab - ask for user confirmation ?
 1. Figure out if using browserify for the main Chatyuk object will be a hinderance when integrating with websites that also use some form of modules
 1. Create a script that will run both jasmine and acceptance test headless so that we can run it on a CI
+1. Add source maps to help with debugging
 1. Add sample on how to embed chatyuk on existing page
 1. Improve default style 
   - Scrollbar in chat window is ugly

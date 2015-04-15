@@ -1,5 +1,5 @@
 "use strict";
-
+var docCookies = require('./utils/cookies.js');
 var Strophe = require('./deps/strophe.js');
               require('./deps/strophe.muc.js');
 
@@ -16,6 +16,7 @@ module.exports =  {
   onDisconnectedCb: null,
   onMessageCb: null,
 
+
   init: function() {
     if(this.connection === null){
       this.connection = new Strophe.Connection(this.boshServiceUrl());
@@ -24,6 +25,8 @@ module.exports =  {
     } else {
       this.connection.reset();
     }
+
+    this.restoreSession();
   },
 
   registerCallbacks: function(onConnectedCb, onDisconnectedCb, onMessageCb) {
@@ -41,6 +44,10 @@ module.exports =  {
     }
   },
 
+  setOnMessageCb: function(onMessageCb) {
+    this.onMessageCb = onMessageCb;
+  },
+
   isCallbackSet: function(cb) {
     return (cb !== null && typeof(cb) != 'undefined');
   },
@@ -55,11 +62,32 @@ module.exports =  {
                        this.onServerConnect.bind(this));
   },
 
-  boshServiceUrl: function() {
-    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
+  saveSession: function() {
+    console.log('start saveSession');
+    console.log('sid', this.connection._proto.sid, 'rid', this.connection._proto.rid);
+    docCookies.setItem('chatyuk_user', this.username);
+    docCookies.setItem('chatyuk_room', this.room);
+    docCookies.setItem('chatyuk_sid', this.connection._proto.sid);
+    docCookies.setItem('chatyuk_rid', this.connection._proto.rid);
+    console.log('end saveSession');
   },
-  setOnMessageCb: function(onMessageCb) {
-    this.onMessageCb = onMessageCb;
+
+  hasPriorSession: function(){
+    return (docCookies.getItem('chatyuk_sid') != 'null' && 
+      docCookies.getItem('chatyuk_rid') != 'null' && 
+      docCookies.getItem('chatyuk_user') != 'null' && 
+      docCookies.getItem('chatyuk_room') != 'null');
+  },
+
+  restoreSession: function(){
+    if(this.hasPriorSession()) {
+      var sid = docCookies.getItem('chatyuk_sid');
+      var rid = parseInt(docCookies.getItem('chatyuk_rid'));
+      this.username = docCookies.getItem('chatyuk_user');
+      this.room = docCookies.getItem('chatyuk_room');
+
+      this.connection.attach(this.jid(), sid, rid, this.onServerConnect.bind(this));
+    }
   },
 
   disconnect: function() {
@@ -141,11 +169,15 @@ module.exports =  {
   },
 
   isConnected: function() {
-    return (this.currentStatus == Strophe.Status.CONNECTED);
+    return (this.currentStatus == Strophe.Status.CONNECTED || this.currentStatus == Strophe.Status.ATTACHED);
   },
 
   groupchat: function(message) {
     this.connection.muc.groupchat(this.roomAndServer(), message);
-  }
+  },
+
+  boshServiceUrl: function() {
+    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
+  },
 
 };
