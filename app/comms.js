@@ -79,6 +79,13 @@ module.exports =  {
       docCookies.getItem('chatyuk_room') != 'null');
   },
 
+  clearSession: function(){
+    docCookies.removeItem('chatyuk_sid'); 
+    docCookies.removeItem('chatyuk_rid'); 
+    docCookies.removeItem('chatyuk_user'); 
+    docCookies.removeItem('chatyuk_room'); 
+  },
+
   restoreSession: function(){
     if(this.hasPriorSession()) {
       var sid = docCookies.getItem('chatyuk_sid');
@@ -131,6 +138,7 @@ module.exports =  {
     }
     else if (status == Strophe.Status.CONNFAIL) {
       console.log('Strophe failed to connect.');
+      this.clearSession();
       if(this.isCallbackSet(this.onDisconnectedCb)) {
         this.onDisconnectedCb();
       }

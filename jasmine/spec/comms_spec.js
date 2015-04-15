@@ -4,12 +4,13 @@ var fakeCookies = {
   store: {},
   setItem: function(k,v) { this.store[k] = v; },
   getItem: function(k) { return this.store[k]; },
-  hasItem: function(k) { return this.store[k] !== undefined; }
+  hasItem: function(k) { return this.store[k] !== undefined; },
+  removeItem: function(k) { delete this.store[k] }
 };
 
 var Strophe = require('./support/mock_strophe.js');
 
-var stubs = { 
+var stubs = {
   './deps/strophe.js': Strophe,
   './deps/strophe.muc.js': {},
   './utils/cookies.js': fakeCookies,
@@ -114,7 +115,7 @@ describe("XmppComms", function() {
       expect(cookieSpy.calls.allArgs()).toEqual(
         [
           ['chatyuk_user', 'fakeuser'],
-          ['chatyuk_room', 'fakeroom'], 
+          ['chatyuk_room', 'fakeroom'],
           ['chatyuk_sid', 'fakesid-123123'],
           ['chatyuk_rid', 999]
         ]);
@@ -134,11 +135,16 @@ describe("XmppComms", function() {
     });
 
     describe('when there was a prior session', function() {
+      var chatyuk_user = 'fakeuser';
+      var chatyuk_room = 'fakeroom';
+      var chatyuk_sid = 's123';
+      var chatyuk_rid = 123;
+
       beforeEach(function() {
-        fakeCookies.setItem('chatyuk_user', 'fakeuser');
-        fakeCookies.setItem('chatyuk_room', 'fakeroom');
-        fakeCookies.setItem('chatyuk_sid', 's123');
-        fakeCookies.setItem('chatyuk_rid', 123);
+        fakeCookies.setItem('chatyuk_user', chatyuk_user);
+        fakeCookies.setItem('chatyuk_room', chatyuk_room);
+        fakeCookies.setItem('chatyuk_sid', chatyuk_sid);
+        fakeCookies.setItem('chatyuk_rid', chatyuk_rid);
       });
 
       it('sets username, room based on the values from the saved session', function() {
@@ -148,14 +154,14 @@ describe("XmppComms", function() {
         expect(comms.room).toEqual('fakeroom');
       });
 
-      it('calls connection attach with the right values');
+      it('calls connection attach with the right values', function(){
+        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
+        comms.connection = fakeConnectionSpy;
+        comms.init();
 
-      describe('when attach fails',function() {
-        it('destroys reference to prior session')
-      })
+        expect(comms.connection.attach).toHaveBeenCalledWith(comms.jid(), chatyuk_sid, chatyuk_rid, jasmine.any(Function));
+      });
     });
-
-
   });
 
   describe('#onMessage', function() {
@@ -208,7 +214,7 @@ describe("XmppComms", function() {
     it('is null by default',function() {
       var comms = Object.create(XmppComms);
       comms.init();
-      comms.connect('fakeuser', 'fakepass', 'fakeroom');
+        comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.currentStatus).toBe(null);
     })
   });
@@ -270,5 +276,37 @@ describe("XmppComms", function() {
                                            );
       });
     });
+
+    describe('when status is CONFAIL', function(){
+      it('destroys reference to prior session', function(){
+        clearSessionSpy = spyOn(comms, 'clearSession');
+        comms.onServerConnect(Strophe.Status.CONNFAIL);
+        expect(clearSessionSpy).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#clearSession', function(){
+    var chatyuk_user = 'fakeuser';
+    var chatyuk_room = 'fakeroom';
+    var chatyuk_sid = 's123';
+    var chatyuk_rid = 123;
+
+    beforeEach(function() {
+      fakeCookies.setItem('chatyuk_user', chatyuk_user);
+      fakeCookies.setItem('chatyuk_room', chatyuk_room);
+      fakeCookies.setItem('chatyuk_sid', chatyuk_sid);
+      fakeCookies.setItem('chatyuk_rid', chatyuk_rid);
+    });
+
+    it("remove prior session reference", function(){
+       comms.init();
+       expect(fakeCookies.getItem('chatyuk_user')).not.toBeUndefined();
+       comms.clearSession();
+       expect(fakeCookies.getItem('chatyuk_user')).toBeUndefined();
+       expect(fakeCookies.getItem('chatyuk_room')).toBeUndefined();
+       expect(fakeCookies.getItem('chatyuk_sid')).toBeUndefined();
+       expect(fakeCookies.getItem('chatyuk_rid')).toBeUndefined();
+     });
   });
 });
