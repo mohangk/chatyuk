@@ -5,8 +5,6 @@ var Strophe = require('./deps/strophe.js');
 
 module.exports =  {
 
-  CHAT_SERVER:  'chatyuk.com',
-  CONFERENCE_SERVER:  'conference.chatyuk.com',
   connection: null,
   username: null,
   password: null,
@@ -27,6 +25,11 @@ module.exports =  {
     }
 
     this.restoreSession();
+  },
+
+  setServerConfig: function(chat_server, conference_server) {
+    this.CHAT_SERVER = chat_server;
+    this.CONFERENCE_SERVER = conference_server;
   },
 
   registerCallbacks: function(onConnectedCb, onDisconnectedCb, onMessageCb) {

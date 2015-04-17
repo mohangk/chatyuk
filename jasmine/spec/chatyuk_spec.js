@@ -2,7 +2,7 @@ var proxyquire = require('proxyquireify')(require);
 var React = require('react');
 var ChatArea = require('../../app/components/chat_area.jsx');
 
-var FakeComms = jasmine.createSpyObj('fake_comms', ['init', 'isConnected', 'registerCallbacks']);
+var FakeComms = jasmine.createSpyObj('fake_comms', ['init', 'isConnected', 'registerCallbacks', 'setServerConfig']);
 
 var stubs = { 
   'react': React,
@@ -26,6 +26,11 @@ describe('Chatyuk',function() {
   describe('defaultConfig', function() {
     it('defaults display_mode to onpage', function() {
       expect(chatyuk.defaultConfig.display_mode).toEqual('inpage');
+    });
+
+    it('has chat_server and conference_server', function() {
+      expect(chatyuk.defaultConfig.chat_server).toEqual('chatyuk.com');;
+      expect(chatyuk.defaultConfig.conference_server).toEqual('conference.chatyuk.com');;
     });
   });
 
@@ -67,6 +72,11 @@ describe('Chatyuk',function() {
       chatyuk = Object.create(Chatyuk);
       chatyuk.initConfig(undefined);
       expect(chatyuk.config).toEqual(jasmine.objectContaining(chatyuk.defaultConfig));
+    });
+
+    it('sets comss server config', function() {
+      chatyuk.initConfig({chat_server: 'example.com', conference_server: 'conf.example.com'});
+      expect(FakeComms.setServerConfig).toHaveBeenCalledWith('example.com', 'conf.example.com');
     });
 
     it('allows for config values to be overriddent', function() {
