@@ -16,14 +16,14 @@ var stubs = {
   './utils/cookies.js': fakeCookies,
 };
 
-var XmppComms = proxyquire('../../app/comms.js', stubs);
+var Comms = proxyquire('../../app/comms.js', stubs);
 
-describe("XmppComms", function() {
+describe("Comms", function() {
 
   var comms;
 
   beforeEach(function() {
-    comms = Object.create(XmppComms);
+    comms = Object.create(Comms);
     fakeCookies.store = {};
   });
 
@@ -246,7 +246,7 @@ describe("XmppComms", function() {
 
   describe('#roomAndServer', function() {
     it('combines generates the room JID',function() {
-      var comms = Object.create(XmppComms);
+      var comms = Object.create(Comms);
       comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.roomAndServer()).toBe('fakeroom@conf.fake.server');
@@ -255,7 +255,7 @@ describe("XmppComms", function() {
 
   describe('currentStatus', function() {
     it('is null by default',function() {
-      var comms = Object.create(XmppComms);
+      var comms = Object.create(Comms);
       comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.currentStatus).toBe(null);

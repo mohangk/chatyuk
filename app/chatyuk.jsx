@@ -3,10 +3,10 @@
 "use strict";
 
 var React = require('react');
-var XmppComms = require('./comms.js');
+var Comms = require('./comms.js');
 var ChatArea = require('./components/chat_area.jsx');
 
-var comms = Object.create(XmppComms);
+var comms = Object.create(Comms);
 
 var Chatyuk = {
 
