@@ -16,7 +16,12 @@
     <script type="text/javascript" src="scripts/bundle.js"></script>
     <script type="text/javascript">
       var chatyuk = Object.create(Chatyuk);
-      chatyuk.init(document.querySelector('#chatarea'), {display_mode: 'inpage'});
+      chatyuk.init(document.querySelector('#chatarea'), { 
+           bosh_service_url: 'http://chatyuk.com:5280/http-bind', 
+           chat_server: 'chatyuk.com',
+           conference_server:'conference.chatyuk.com', 
+           display_mode: 'inpage'
+       });
     </script>
   </body>
 

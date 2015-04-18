@@ -28,32 +28,31 @@ describe('Chatyuk',function() {
       expect(chatyuk.defaultConfig.display_mode).toEqual('inpage');
     });
 
-    it('has chat_server and conference_server', function() {
-      expect(chatyuk.defaultConfig.chat_server).toEqual('chatyuk.com');;
-      expect(chatyuk.defaultConfig.conference_server).toEqual('conference.chatyuk.com');;
+    it('has bosh_service_url, chat_server and conference_server', function() {
+      expect(chatyuk.defaultConfig.bosh_service_url).toEqual('http://chatyuk.com:5280/http-bind');
+      expect(chatyuk.defaultConfig.chat_server).toEqual('chatyuk.com');
+      expect(chatyuk.defaultConfig.conference_server).toEqual('conference.chatyuk.com');
     });
   });
 
   describe('init', function() {
 
     var renderComponentSpy = null;
-    var initConfigSpy = null;
     var chatyuk = null;
 
     beforeEach(function() {
       chatyuk = Object.create(Chatyuk);
       renderComponentSpy = spyOn(chatyuk, 'renderComponent');
-      initConfigSpy = spyOn(chatyuk, 'initConfig');
     });
 
     it('initializes the comms object', function() {
-
-      chatyuk.init('fakeParentEl', 'fakeConfig');
-      expect(FakeComms.init).toHaveBeenCalled();
-
+      var initParams = {bosh_service_url: 'fake', chat_server: 'fake_server', conference_server: 'fake_conf_server'};
+      chatyuk.init('fakeParentEl', initParams);
+      expect(FakeComms.init).toHaveBeenCalledWith(initParams.bosh_service_url, initParams.chat_server, initParams.conference_server);
     });
 
     it('calls initConfig with the passed in config', function() {
+      var initConfigSpy = spyOn(chatyuk, 'initConfig').and.callThrough();
       var configSpy = jasmine.createSpy();
       chatyuk.init('fakeParentEl', configSpy);
       expect(initConfigSpy).toHaveBeenCalledWith(configSpy);
@@ -74,12 +73,7 @@ describe('Chatyuk',function() {
       expect(chatyuk.config).toEqual(jasmine.objectContaining(chatyuk.defaultConfig));
     });
 
-    it('sets comss server config', function() {
-      chatyuk.initConfig({chat_server: 'example.com', conference_server: 'conf.example.com'});
-      expect(FakeComms.setServerConfig).toHaveBeenCalledWith('example.com', 'conf.example.com');
-    });
-
-    it('allows for config values to be overriddent', function() {
+    it('allows for config values to be overridden', function() {
       chatyuk = Object.create(Chatyuk);
       chatyuk.initConfig({display_mode: 'onpage'});
       expect(chatyuk.config.display_mode).toEqual('onpage');

@@ -28,22 +28,31 @@ describe("XmppComms", function() {
   });
 
   describe('#init', function() {
+
+    it('sets the boshServiceUrl and conferenceServer', function() {
+      comms.init('http://fakeBoshUrl','fake.server','conf.fake.server');
+      expect(comms.boshServiceUrl).toEqual('http://fakeBoshUrl');
+      expect(comms.boshServiceUrl).toEqual('http://fakeBoshUrl');
+      expect(comms.chatServer).toEqual('fake.server');
+      expect(comms.conferenceServer).toEqual('conf.fake.server');
+    });
+
     it('tries to restore existing sessions', function() {
       spyOn(comms,'restoreSession')
-      comms.init();
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       expect(comms.restoreSession).toHaveBeenCalled();
     })
 
     describe('when the connection does not exist',function() {
       it('initializes it', function() {
         expect(comms.connection).toBeNull();
-        comms.init();
+        comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
         expect(comms.connection.connect).toBeDefined();
       });
 
       it('sets boshservice', function() {
-        comms.init();
-        expect(comms.connection.boshService).toBe(comms.boshServiceUrl());
+        comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
+        expect(comms.connection.boshService).toBe(comms.boshServiceUrl);
       });
 
     });
@@ -52,18 +61,26 @@ describe("XmppComms", function() {
       it('resets it', function() {
         var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
         comms.connection = fakeConnectionSpy;
-        comms.init();
+        comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
         expect(fakeConnectionSpy.reset).toHaveBeenCalled();
       });
     });
   });
 
-  describe('#setServerConfig', function() {
-    it('assigns CHAT_SERVER and CONFERENCE_SERVER', function() {
-      XmppComms.setServerConfig('example.com', 'conference.example.com');
-      expect(XmppComms.CHAT_SERVER).toEqual('example.com');
-      expect(XmppComms.CONFERENCE_SERVER).toEqual('conference.example.com');
+  describe('#setConfig', function() {
+    it('assigns boshServiceUrl and conferenceServer', function() {
+      comms.setConfig('http://example.com', 'example.com' ,'conference.example.com');
+      expect(comms.boshServiceUrl).toEqual('http://example.com');
+      expect(comms.conferenceServer).toEqual('conference.example.com');
     })
+
+    describe('when either parameter is not set', function() {
+      it('throws an exception', function() {
+        expect(function() { comms.setConfig('blah')       }).toThrowError(TypeError);
+        expect(function() { comms.setConfig('', 'blah')   }).toThrowError(TypeError);
+        expect(function() { comms.setConfig('blah', null) }).toThrowError(TypeError);
+      });
+    });
   });
 
   describe('#registerCallbacks', function() {
@@ -82,7 +99,7 @@ describe("XmppComms", function() {
 
   describe('#connect', function() {
     beforeEach(function() {
-      comms.init();
+      comms.init('http://fakebosh', 'fake.server', 'fake.conference.server');
     });
 
     it("sets the username, password, rooom", function() {
@@ -114,7 +131,7 @@ describe("XmppComms", function() {
 
   describe('#saveSession', function() {
     it('stores the jid, sid, rid, username, room into cookie', function() {
-      comms.init();
+      comms.init('http://fakebosh', 'fake.server', 'fake.conference.server');
 
       cookieSpy = spyOn(fakeCookies,'setItem');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
@@ -137,7 +154,7 @@ describe("XmppComms", function() {
         var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
         comms.connection = fakeConnectionSpy;
         spyOn(comms,'hasPriorSession').and.returnValue(false);
-        comms.init();
+        comms.init('http://fakebosh','fake.server','fake.conference.server');
         expect(fakeConnectionSpy.attach).not.toHaveBeenCalled();
       });
     });
@@ -156,7 +173,7 @@ describe("XmppComms", function() {
       });
 
       it('sets username, room based on the values from the saved session', function() {
-        comms.init();
+      comms.init('http://fakebosh','fake.server','fake.conference.server');
 
         expect(comms.username).toEqual('fakeuser');
         expect(comms.room).toEqual('fakeroom');
@@ -165,7 +182,7 @@ describe("XmppComms", function() {
       it('calls connection attach with the right values', function(){
         var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
         comms.connection = fakeConnectionSpy;
-        comms.init();
+        comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
 
         expect(comms.connection.attach).toHaveBeenCalledWith(comms.jid(), chatyuk_sid, chatyuk_rid, jasmine.any(Function));
       });
@@ -181,7 +198,7 @@ describe("XmppComms", function() {
 
     beforeEach(function() {
       onMessageCb = jasmine.createSpy('onMessageCb');
-      comms.init()
+      comms.init('http://fakebosh', 'fake.server', 'fake.conference.server');
       comms.setOnMessageCb(onMessageCb);
     });
 
@@ -209,27 +226,45 @@ describe("XmppComms", function() {
 
   });
 
+  describe('#jid', function() {
+    beforeEach(function() {
+      comms.init('http://fakebosh', 'fake.server', 'fake.conference.server');
+    });
+
+    it('combines the username with the chatserver to create the user JID',function() {
+      comms.connect('fakeuser', 'fakepass', 'fakeroom');
+      expect(comms.jid()).toBe('fakeuser@fake.server');
+    });
+
+    describe('when we login anonymously', function() {
+      it('returns the chatserver as the jid', function() {
+        comms.connect('fakeuser', '', 'fakeroom');
+        expect(comms.jid()).toBe('fake.server');
+      });
+    });
+  });
+
   describe('#roomAndServer', function() {
     it('combines generates the room JID',function() {
       var comms = Object.create(XmppComms);
-      comms.init();
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
-      expect(comms.roomAndServer()).toBe('fakeroom@'+XmppComms.CONFERENCE_SERVER);
+      expect(comms.roomAndServer()).toBe('fakeroom@conf.fake.server');
     })
   });
 
   describe('currentStatus', function() {
     it('is null by default',function() {
       var comms = Object.create(XmppComms);
-      comms.init();
-        comms.connect('fakeuser', 'fakepass', 'fakeroom');
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
+      comms.connect('fakeuser', 'fakepass', 'fakeroom');
       expect(comms.currentStatus).toBe(null);
     })
   });
 
   describe('#isConnected', function(){
     beforeEach(function() {
-      comms.init();
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
     });
     describe('when currentStatus is CONNECTED', function() {
@@ -260,7 +295,7 @@ describe("XmppComms", function() {
   describe('#onServerConnect', function() {
 
     beforeEach(function(){
-      comms.init();
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
       comms.connect('fakeuser', 'fakepass', 'fakeroom');
     });
 
@@ -308,7 +343,7 @@ describe("XmppComms", function() {
     });
 
     it("remove prior session reference", function(){
-       comms.init();
+      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
        expect(fakeCookies.getItem('chatyuk_user')).not.toBeUndefined();
        comms.clearSession();
        expect(fakeCookies.getItem('chatyuk_user')).toBeUndefined();

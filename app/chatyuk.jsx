@@ -12,6 +12,7 @@ var Chatyuk = {
 
   defaultConfig: {
     display_mode: 'inpage',
+    bosh_service_url: 'http://chatyuk.com:5280/http-bind',
     chat_server: 'chatyuk.com',
     conference_server: 'conference.chatyuk.com'
   },
@@ -19,7 +20,10 @@ var Chatyuk = {
   init: function(parentEl, config) {
     this.initConfig(config);
 
-    comms.init();
+    comms.init(this.config.bosh_service_url, 
+               this.config.chat_server, 
+               this.config.conference_server);
+
     this.renderComponent(parentEl);
   },
 
@@ -28,8 +32,6 @@ var Chatyuk = {
     for (var attrname in customConfig) { 
       this.config[attrname] = customConfig[attrname]; 
     }
-
-    comms.setServerConfig(this.config.chat_server, this.config.conference_server);
   },
 
   renderComponent: function(parentEl) {

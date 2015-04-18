@@ -5,6 +5,9 @@ var Strophe = require('./deps/strophe.js');
 
 module.exports =  {
 
+  boshServiceUrl: null,
+  chatServer: null,
+  conferenceServer: null,
   connection: null,
   username: null,
   password: null,
@@ -15,9 +18,11 @@ module.exports =  {
   onMessageCb: null,
 
 
-  init: function() {
+  init: function(boshServiceUrl, chatServer, conferenceServer) {
+    this.setConfig(boshServiceUrl, chatServer, conferenceServer);
+
     if(this.connection === null){
-      this.connection = new Strophe.Connection(this.boshServiceUrl());
+      this.connection = new Strophe.Connection(this.boshServiceUrl);
       this.connection.rawInput = this.rawInput;
       this.connection.rawOutput = this.rawOutput;
     } else {
@@ -27,9 +32,23 @@ module.exports =  {
     this.restoreSession();
   },
 
-  setServerConfig: function(chat_server, conference_server) {
-    this.CHAT_SERVER = chat_server;
-    this.CONFERENCE_SERVER = conference_server;
+  setConfig: function(boshServiceUrl, chatServer, conferenceServer) {
+
+    if(!this.isConfigSet(boshServiceUrl) || 
+       !this.isConfigSet(chatServer)     ||
+       !this.isConfigSet(conferenceServer)) {
+      throw new TypeError('boshServiceUrl and conferenceServer must be set');
+    }
+
+    this.boshServiceUrl = boshServiceUrl;
+    this.chatServer = chatServer;
+    this.conferenceServer = conferenceServer;
+  },
+
+  isConfigSet: function(configValue){
+    return (configValue !== null && 
+            configValue !== ''   &&
+            typeof(configValue) != 'undefined');
   },
 
   registerCallbacks: function(onConnectedCb, onDisconnectedCb, onMessageCb) {
@@ -101,7 +120,7 @@ module.exports =  {
   },
 
   disconnect: function() {
-    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect(); }.bind(this));
+    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect(); this.clearSession(); }.bind(this));
   },
 
   log: function() {
@@ -169,14 +188,14 @@ module.exports =  {
   jid: function() {
     //if password is blank we assume this is an anonymous login
     if(this.password === '') {
-      return this.CHAT_SERVER;
+      return this.chatServer;
     } else {
-      return this.username+'@'+this.CHAT_SERVER;
+      return this.username+'@'+this.chatServer;
     }
   },
 
   roomAndServer: function() {
-    return this.room+'@'+this.CONFERENCE_SERVER;
+    return this.room+'@'+this.conferenceServer;
   },
 
   isConnected: function() {
@@ -185,10 +204,6 @@ module.exports =  {
 
   groupchat: function(message) {
     this.connection.muc.groupchat(this.roomAndServer(), message);
-  },
-
-  boshServiceUrl: function() {
-    return 'http://'+this.CHAT_SERVER+':5280/http-bind';
   },
 
 };
