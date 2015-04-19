@@ -14,6 +14,19 @@ module.exports = {
         .waitForElementVisible('.chat-message', 1000)
         .assert.containsText('.chat-message', 'test message');
     },
+  
+   "it maintains session after reloading page" : function(browser) {
+      browser
+      .url("http://chatyuk.com:8000/public/chat.html")
+      .waitForElementVisible('body', 1000);
+    },
+
+    "enter test message 2" : function(browser) {
+      browser
+      .setValue('.chat-textarea', ['test message 2', browser.Keys.ENTER])
+      .waitForElementVisible('.chat-message', 1000)
+      .assert.containsText('.chat-message', 'test message 2');
+    },
 
     "logout": function(browser) {
       loginDialog.logout();
