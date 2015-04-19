@@ -22,6 +22,8 @@ html {
 }
 
 #chatyuk {
+  position: relative;
+  height: 100%;
   font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
 }
 
@@ -543,22 +545,6 @@ html {
   height: calc(100% - 35px);
   border-top: 0;
 }
-#chatyuk .chatroom .chat-area {
-  float: left;
-  height: 100%;
-  width: 100%;
-  text-align: center;
-}
-/* #chatyuk .chatroom .participants { */
-/*   float: right; */
-/*   background-color: white; */
-/*   overflow-y: auto; */
-/*   overflow-x: hidden; */
-/*   border-left: 1px solid #AAA; */
-/*   border-bottom-right-radius: 4px; */
-/*   width: 100px; */
-/*   height: 100%; */
-/* } */
 #chatyuk .tt-highlight {
   background-color: #00230F;
 }

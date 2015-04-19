@@ -5,8 +5,41 @@
 var React  = require('react');
 var ChatBoxHead = require('./chat_box_head.jsx');
 
+var style = {
+  onPage: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 25
+  },
+
+  dragResize: {
+    position: 'absolute',
+    width: 200,
+    height: 5,
+    background: 'transparent',
+    border: 0,
+    top: 0,
+    marginLeft: 0,
+    cursor: 'n-resize',
+    zIndex: 20
+  },
+
+  boxFlyout: {
+    borderRadius: 4,
+    boxShadow: '1px 3px 5px 3px rgba(0, 0, 0, 0.4)',
+    position: 'absolute',
+    display: 'block',
+    bottom: 5,
+    width: 300,
+    marginLeft: 0
+  }
+
+};
+
 var ChatBox = React.createClass({
-  
+
   getInitialState: function() {
     return {
       minimized: false,
@@ -62,60 +95,34 @@ var ChatBox = React.createClass({
 
   render: function() {
 
-    var controlBoxStyle = {
+    style.boxFlyout.height = this.state.height;
+
+    style.controlBox = {
       display: (this.state.minimized ? 'block' : 'none')
     };
 
-    var chatRoomStyle = {
+    style.chatRoom = {
       display: (!this.state.minimized ? 'block' : 'none')
     };
 
-    var onPageStyle = {
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 25
-    };
-
-    var dragResizeStyle = {
-      position: 'absolute',
-      width: 200,
-      height: 5,
-      background: 'transparent',
-      border: 0,
-      top: 0,
-      marginLeft: 0,
-      cursor: 'n-resize',
-      zIndex: 20
-    };
-
-    var boxFlyoutStyle = {
-      borderRadius: 4,
-      boxShadow: '1px 3px 5px 3px rgba(0, 0, 0, 0.4)',
-      height: this.state.height,
-      position: 'absolute',
-      display: 'block',
-      bottom: 5,
-      width: 300,
-      marginLeft: 0
-    };
-
     return (
-         <div id="chatyuk" style={onPageStyle}>
-         <a href="#" onClick={this.maximize}  style={controlBoxStyle} id="toggle-controlbox" className="toggle-controlbox"><span className="conn-feedback">Toggle chat</span> </a>
-         <div style={chatRoomStyle} className="chatroom">
-           <div className="box-flyout" style={boxFlyoutStyle} >
-             <div className="dragresize dragresize-tm" onMouseDown={this.dragStart} style={dragResizeStyle}></div>
-             <ChatBoxHead onMinimize={this.minimize} />
-             <div className="chat-body" >
-               <div className="chat-area">
-               {this.props.children}
-               </div>
-             </div>
-         </div>
-       </div>
-       </div>
+      <div id="chatyuk" style={style.onPage}>
+        <a href="#" onClick={this.maximize}  style={style.controlBox} id="toggle-controlbox" className="toggle-controlbox">
+          <span className="conn-feedback">Toggle chat</span>
+        </a>
+        <div style={style.chatRoom} className="chatroom">
+          <div className="box-flyout" style={style.boxFlyout}>
+            <div className="dragresize dragresize-tm" onMouseDown={this.dragStart} style={style.dragResize}>
+            </div>
+
+            <ChatBoxHead onMinimize={this.minimize} />
+
+            <div className="chat-body" >
+              {this.props.children}
+            </div>
+          </div>
+        </div>
+      </div>
      );
   }
 });

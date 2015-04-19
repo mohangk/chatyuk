@@ -9,6 +9,17 @@ var LoggedInBox = require('./logged_in_box.jsx');
 var LoginForm = require('./login_form.jsx');
 var MessageBox = require('./message_box.jsx');
 
+
+var style = {
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
+  }
+};
+
+
 var ChatArea = React.createClass({
   getInitialState: function() {
     return {
@@ -69,8 +80,12 @@ var ChatArea = React.createClass({
       return (
       <ChatBox>
         <MessagePane comms={this.props.comms} />
-        <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
-        <MessageBox comms={this.props.comms} />
+
+        <footer style={style.footer}>
+          <LoggedInBox logout={this.logout} username={this.state.username} room={this.state.room} />
+          <MessageBox comms={this.props.comms} />
+        </footer>
+
       </ChatBox>
       );
     } else {

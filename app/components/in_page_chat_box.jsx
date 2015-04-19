@@ -8,13 +8,12 @@ var InPageChatBox = React.createClass({
   render: function() {
     return (
       <div id="chatyuk">
-       <ChatBoxHead ref="chatBoxHead"/>
+        <ChatBoxHead ref="chatBoxHead"/>
         <div className="chat-body" >
-         <div className="chat-area">
-           {this.props.children}
-          </div>
+          {this.props.children}
         </div>
-      </div>);
+      </div>
+    );
   }
 
 });
