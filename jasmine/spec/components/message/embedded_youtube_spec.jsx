@@ -17,9 +17,10 @@ describe("EmbeddedYoutube", function() {
 
   describe('toEmbedUrl', function () {
     it('convert normal youtube url to embed url', function() {
-      var embeddedYoutube = <EmbeddedYoutube src="http://www.youtube.com/watch?v=bNT-CT25clM" />;
+      var embeddedYoutube = <EmbeddedYoutube src=""/>;
       instance = TestUtils.renderIntoDocument(embeddedYoutube);
-      expect(instance.toEmbedUrl()).toEqual('http://www.youtube.com/embed/bNT-CT25clM');
+      expect(instance.toEmbedUrl('http://www.youtube.com/watch?v=bNT-CT25clM'))
+                        .toEqual('http://www.youtube.com/embed/bNT-CT25clM');
     });
   });
 });
