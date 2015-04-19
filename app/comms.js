@@ -95,10 +95,10 @@ module.exports =  {
   },
 
   hasPriorSession: function(){
-    return (docCookies.getItem('chatyuk_sid') != 'null' && 
-      docCookies.getItem('chatyuk_rid') != 'null' && 
-      docCookies.getItem('chatyuk_user') != 'null' && 
-      docCookies.getItem('chatyuk_room') != 'null');
+    return (docCookies.getItem('chatyuk_sid') && 
+      docCookies.hasItem('chatyuk_rid') && 
+      docCookies.hasItem('chatyuk_user') && 
+      docCookies.hasItem('chatyuk_room'));
   },
 
   clearSession: function(){
