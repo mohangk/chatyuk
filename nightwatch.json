@@ -6,7 +6,7 @@
   "globals_path" : "",
   "live_output" : false,
   "parallel_process_delay" : 10,
-  "disable_colors": false,
+  "disable_colors" : false,
 
   "selenium" : {
     "start_process" : false,
@@ -28,6 +28,9 @@
       "selenium_port" : 4444,
       "silent" : true,
       "disable_colors": false,
+      "globals" : {
+        "waitForConditionTimeout" : 5000
+      },
       "screenshots" : {
         "enabled" : false,
         "path" : ""
