@@ -69,21 +69,20 @@ config accepts the following keys
 
 ## Todo
 
-1. Logout if I reload the page or close the tab - ask for user confirmation ?
-1. Figure out if using browserify for the main Chatyuk object will be a hinderance when integrating with websites that also use some form of modules
+1. When using onpage mode, we remove the element that is passed to chatyuk. Instead we should create a dummy element and append to it.
 1. Create a script that will run both jasmine and acceptance test headless so that we can run it on a CI
+  - Running nightwatch headleass - https://github.com/beatfactor/nightwatch/wiki/Running-tests-in-PhantomJS
 1. Add source maps to help with debugging
 1. Add sample on how to embed chatyuk on existing page
 1. Improve default style 
   - Scrollbar in chat window is ugly
   - On Firefox when display_mode = 'inpage', the messagepane is not expanded
   - Removed unused CSS in chatyuk.css file
-1. Remove hardcoded domain names from both client and server configurations
+1. Remove hardcoded domain names from both client and server configurations (we should be able to leave them empty)
 1. Websocket support
-1. Fix bug with rejoining rooms without logging out. 
-  - store the auth sessions in a cookie on the browser so that users can resume after reloading page
-  - converse.js had the same issue and they fixed it be removing strophe.muc.js, yikes
-    - https://github.com/jcbrand/converse.js/issues/307
+1. When rejoining rooms on reloadig a page, we loose all messages from the room. Maybe there is a way to get the prior messages ?
+1. Figure out why converse.js dumped the muc plugin ?
+  - https://github.com/jcbrand/converse.js/issues/307
 1. Implement sample server code to create a pre-bound session and integrate with comms.js
   - Ruby lib to create prebound sessions
     - https://github.com/skyfallsin/ruby_bosh
