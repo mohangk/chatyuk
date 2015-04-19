@@ -1,3 +1,5 @@
+"use strict";
+
 var React  = require('react');
 
 var emoji_map = require('../../message_formatters/emoji_map.js');
@@ -9,8 +11,9 @@ var Emoticon = React.createClass({
   },
 
   render: function() {
-    return <i style={this.backgroundImageStyle()} className='twa' ></i>
+    return <i style={this.backgroundImageStyle()} className='twa' ></i>;
   }
+
 });
 
 module.exports = Emoticon;

@@ -1,3 +1,7 @@
+/* global document */
+
+"use strict";
+
 /*\
 |*|
 |*|  :: cookies.js ::

@@ -1,4 +1,5 @@
 "use strict";
+
 var docCookies = require('./utils/cookies.js');
 var Strophe = require('./deps/strophe.js');
               require('./deps/strophe.muc.js');

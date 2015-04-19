@@ -11,7 +11,7 @@ var EmbeddedVidio = React.createClass({
 
   render: function() {
     var embedUrl = this.toEmbedUrl(this.props.src);
-    return <iframe style={style} src={embedUrl} scrolling="no" />
+    return <iframe style={style} src={embedUrl} scrolling="no" />;
   },
 
   toEmbedUrl: function(url) {

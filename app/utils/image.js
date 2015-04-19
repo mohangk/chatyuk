@@ -1,3 +1,5 @@
+/* global Image */
+
 "use strict";
 
 function immutableImage(img) {
@@ -7,7 +9,7 @@ function immutableImage(img) {
     height:   img.naturalHeight
   };
 
-};
+}
 
 var ImageUtil = {
 

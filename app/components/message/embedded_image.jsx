@@ -1,3 +1,5 @@
+"use strict";
+
 var React  = require('react');
 
 var ImageUtil = require('../../utils/image.js');
@@ -17,7 +19,7 @@ var EmbeddedImage = React.createClass({
       style.height = Math.min(dimensions.height, 150);
     }
 
-    return <img style={style} src={this.props.src} />
+    return <img style={style} src={this.props.src} />;
   }
 
 });
