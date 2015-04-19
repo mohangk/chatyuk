@@ -29,8 +29,8 @@ var Message = React.createClass({
   render: function() {
     return(
       <li className='chat-message'>
-        <span ref="sender" className="chat-message-room">{this.formatSender(this.props.sender)}</span>
-        <span ref="body" className="chat-message-content" >{this.formatBody(this.props.body)}</span>
+        <span key="sender" ref="sender" className="chat-message-room">{this.formatSender(this.props.sender)}</span>
+        <span key="body" ref="body" className="chat-message-content" >{this.formatBody(this.props.body)}</span>
       </li>
     );
   }
