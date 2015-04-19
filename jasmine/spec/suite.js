@@ -16,3 +16,5 @@ require("./components/message/embedded_image_spec.jsx");
 require("./components/message/embedded_youtube_spec.jsx");
 require("./components/message/embedded_vidio_spec.jsx");
 require("./components/message/link_spec.jsx");
+
+require("./utils/image_spec.js");
