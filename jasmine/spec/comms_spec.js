@@ -1,19 +1,12 @@
 var proxyquire = require('proxyquireify')(require);
 
-var fakeCookies = {
-  store: {},
-  setItem: function(k,v) { this.store[k] = v; },
-  getItem: function(k) { return this.store[k]; },
-  hasItem: function(k) { return this.store[k] !== undefined; },
-  removeItem: function(k) { delete this.store[k] }
-};
-
 var Strophe = require('./support/mock_strophe.js');
+var session = require('../../app/comms/session_manager.js');
 
 var stubs = {
   './deps/strophe.js': Strophe,
   './deps/strophe.muc.js': {},
-  './utils/cookies.js': fakeCookies,
+  './comms/session_manager.js': session
 };
 
 var Comms = proxyquire('../../app/comms.js', stubs);
@@ -24,7 +17,6 @@ describe("Comms", function() {
 
   beforeEach(function() {
     comms = Object.create(Comms);
-    fakeCookies.store = {};
   });
 
   describe('#init', function() {
@@ -129,62 +121,45 @@ describe("Comms", function() {
   });
 
 
-  describe('#saveSession', function() {
-    it('stores the jid, sid, rid, username, room into cookie', function() {
-      comms.init('http://fakebosh', 'fake.server', 'fake.conference.server');
-
-      cookieSpy = spyOn(fakeCookies,'setItem');
-      comms.connect('fakeuser', 'fakepass', 'fakeroom');
-      comms.saveSession();
-      //the rid, sid values are hardcoded in mock-strophe
-      expect(cookieSpy.calls.allArgs()).toEqual(
-        [
-          ['chatyuk_user', 'fakeuser'],
-          ['chatyuk_room', 'fakeroom'],
-          ['chatyuk_sid', 'fakesid-123123'],
-          ['chatyuk_rid', 999]
-        ]);
-    });
-
+  describe('#disconnect', function() {
+    it('leaves the room');
+    it('closes the connection');
+    it('clears the session');
   });
+
+
 
   describe('#restoreSession', function() {
     describe('when there was no prior session', function() {
       it('does not try to attach', function() {
         var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
         comms.connection = fakeConnectionSpy;
-        spyOn(comms,'hasPriorSession').and.returnValue(false);
+        spyOn(session, 'exists').and.returnValue(false);
         comms.init('http://fakebosh','fake.server','fake.conference.server');
         expect(fakeConnectionSpy.attach).not.toHaveBeenCalled();
       });
     });
 
     describe('when there was a prior session', function() {
-      var chatyuk_user = 'fakeuser';
-      var chatyuk_room = 'fakeroom';
-      var chatyuk_sid = 's123';
-      var chatyuk_rid = 123;
+      var fakeSessionDetails = {username: 'fakeuser', room: 'fakeroom', sid: 's123', rid: 123 }
 
       beforeEach(function() {
-        fakeCookies.setItem('chatyuk_user', chatyuk_user);
-        fakeCookies.setItem('chatyuk_room', chatyuk_room);
-        fakeCookies.setItem('chatyuk_sid', chatyuk_sid);
-        fakeCookies.setItem('chatyuk_rid', chatyuk_rid);
+        spyOn(session, 'retrieve').and.returnValue(fakeSessionDetails);
+        spyOn(session, 'exists').and.returnValue(true);
+
+        comms.connection =  jasmine.createSpyObj('fake_connection', ['attach','reset']);
       });
 
       it('sets username, room based on the values from the saved session', function() {
-      comms.init('http://fakebosh','fake.server','fake.conference.server');
+        comms.restoreSession();
 
         expect(comms.username).toEqual('fakeuser');
         expect(comms.room).toEqual('fakeroom');
       });
 
       it('calls connection attach with the right values', function(){
-        var fakeConnectionSpy = jasmine.createSpyObj('fake_connection', ['attach','reset']);
-        comms.connection = fakeConnectionSpy;
-        comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
-
-        expect(comms.connection.attach).toHaveBeenCalledWith(comms.jid(), chatyuk_sid, chatyuk_rid, jasmine.any(Function));
+        comms.restoreSession();
+        expect(comms.connection.attach).toHaveBeenCalledWith(comms.jid(), fakeSessionDetails.sid, fakeSessionDetails.rid, jasmine.any(Function));
       });
     });
   });
@@ -322,34 +297,11 @@ describe("Comms", function() {
 
     describe('when status is CONFAIL', function(){
       it('destroys reference to prior session', function(){
-        clearSessionSpy = spyOn(comms, 'clearSession');
+        spyOn(session, 'clear');
         comms.onServerConnect(Strophe.Status.CONNFAIL);
-        expect(clearSessionSpy).toHaveBeenCalled();
+        expect(session.clear).toHaveBeenCalled();
       });
     });
   });
 
-  describe('#clearSession', function(){
-    var chatyuk_user = 'fakeuser';
-    var chatyuk_room = 'fakeroom';
-    var chatyuk_sid = 's123';
-    var chatyuk_rid = 123;
-
-    beforeEach(function() {
-      fakeCookies.setItem('chatyuk_user', chatyuk_user);
-      fakeCookies.setItem('chatyuk_room', chatyuk_room);
-      fakeCookies.setItem('chatyuk_sid', chatyuk_sid);
-      fakeCookies.setItem('chatyuk_rid', chatyuk_rid);
-    });
-
-    it("remove prior session reference", function(){
-      comms.init('http://fakeBoshUrl', 'fake.server', 'conf.fake.server');
-       expect(fakeCookies.getItem('chatyuk_user')).not.toBeUndefined();
-       comms.clearSession();
-       expect(fakeCookies.getItem('chatyuk_user')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_room')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_sid')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_rid')).toBeUndefined();
-     });
-  });
 });

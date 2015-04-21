@@ -1,6 +1,6 @@
 "use strict";
 
-var docCookies = require('./utils/cookies.js');
+var session = require('./comms/session_manager.js');
 var Strophe = require('./deps/strophe.js');
               require('./deps/strophe.muc.js');
 
@@ -35,7 +35,7 @@ module.exports =  {
 
   setConfig: function(boshServiceUrl, chatServer, conferenceServer) {
 
-    if(!this.isConfigSet(boshServiceUrl) || 
+    if(!this.isConfigSet(boshServiceUrl) ||
        !this.isConfigSet(chatServer)     ||
        !this.isConfigSet(conferenceServer)) {
       throw new TypeError('boshServiceUrl and conferenceServer must be set');
@@ -47,7 +47,7 @@ module.exports =  {
   },
 
   isConfigSet: function(configValue){
-    return (configValue !== null && 
+    return (configValue !== null &&
             configValue !== ''   &&
             typeof(configValue) != 'undefined');
   },
@@ -86,42 +86,30 @@ module.exports =  {
   },
 
   saveSession: function() {
-    console.log('start saveSession');
-    console.log('sid', this.connection._proto.sid, 'rid', this.connection._proto.rid);
-    docCookies.setItem('chatyuk_user', this.username);
-    docCookies.setItem('chatyuk_room', this.room);
-    docCookies.setItem('chatyuk_sid', this.connection._proto.sid);
-    docCookies.setItem('chatyuk_rid', this.connection._proto.rid);
-    console.log('end saveSession');
-  },
+    var details = {
+      username: this.username,
+      room: this.room,
+      sid: this.connection._proto.sid,
+      rid: this.connection._proto.rid
+    }
 
-  hasPriorSession: function(){
-    return (docCookies.getItem('chatyuk_sid') && 
-      docCookies.hasItem('chatyuk_rid') && 
-      docCookies.hasItem('chatyuk_user') && 
-      docCookies.hasItem('chatyuk_room'));
-  },
-
-  clearSession: function(){
-    docCookies.removeItem('chatyuk_sid'); 
-    docCookies.removeItem('chatyuk_rid'); 
-    docCookies.removeItem('chatyuk_user'); 
-    docCookies.removeItem('chatyuk_room'); 
+    session.save(details);
   },
 
   restoreSession: function(){
-    if(this.hasPriorSession()) {
-      var sid = docCookies.getItem('chatyuk_sid');
-      var rid = parseInt(docCookies.getItem('chatyuk_rid'));
-      this.username = docCookies.getItem('chatyuk_user');
-      this.room = docCookies.getItem('chatyuk_room');
-
-      this.connection.attach(this.jid(), sid, rid, this.onServerConnect.bind(this));
+    if(session.exists()) {
+      var details = session.retrieve();
+      this.username = details.username;
+      this.room = details.room;
+      this.connection.attach(this.jid(), details.sid, details.rid, this.onServerConnect.bind(this));
     }
   },
 
   disconnect: function() {
-    this.connection.muc.leave(this.roomAndServer(), this.username, function() { this.connection.disconnect(); this.clearSession(); }.bind(this));
+    this.connection.muc.leave(this.roomAndServer(), 
+                              this.username, 
+                              function() { this.connection.disconnect(); session.clear(); }.bind(this)
+                             );
   },
 
   log: function() {
@@ -161,7 +149,7 @@ module.exports =  {
     }
     else if (status == Strophe.Status.CONNFAIL) {
       console.log('Strophe failed to connect.');
-      this.clearSession();
+      session.clear();
       if(this.isCallbackSet(this.onDisconnectedCb)) {
         this.onDisconnectedCb();
       }
