@@ -33,10 +33,10 @@ describe('SessionManager', function() {
 
       expect(cookieSpy.calls.allArgs()).toEqual(
         [
-          ['chatyuk_user', fakeSession.username],
-          ['chatyuk_room', fakeSession.room],
-          ['chatyuk_sid',  fakeSession.sid],
-          ['chatyuk_rid',  fakeSession.rid]
+          ['chatyuk_user', fakeSession.username, Infinity],
+          ['chatyuk_room', fakeSession.room, Infinity],
+          ['chatyuk_sid',  fakeSession.sid, Infinity],
+          ['chatyuk_rid',  fakeSession.rid, Infinity]
         ]);
     });
   });

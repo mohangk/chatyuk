@@ -4,10 +4,10 @@ var docCookies = require('../utils/cookies.js');
 module.exports = {
 
   save: function(session) {
-    docCookies.setItem('chatyuk_user', session.username);
-    docCookies.setItem('chatyuk_room', session.room);
-    docCookies.setItem('chatyuk_sid', session.sid);
-    docCookies.setItem('chatyuk_rid', session.rid);
+    docCookies.setItem('chatyuk_user', session.username, Infinity);
+    docCookies.setItem('chatyuk_room', session.room, Infinity);
+    docCookies.setItem('chatyuk_sid', session.sid, Infinity);
+    docCookies.setItem('chatyuk_rid', session.rid, Infinity);
   },
 
   exists: function(){
