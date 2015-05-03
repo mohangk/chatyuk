@@ -48,11 +48,18 @@ Due to the way some of the configurations are hardcoded now, you will need to ad
   Chatyuk.init(document.querySelector('#chatarea'), {display_mode: 'onpage'});
 </script>
 ```
-1. Chatyuk.init(element, config);
+1. Chatyuk.init(parentElement, config);
 config accepts the following keys
+
   * display_mode 
     - 'onpage', the chat window floats on an existing page
     - 'inpage', the chat window is embedded into the page
+    In both cases we create a new child div to the parentElement 
+    and use that as the container for Chatyuk. This is to ensure that any children are not replaced by React.render.
+
+  * bosh_service_url
+  * chat_server
+  * conference_server
 
 ## Features
 
@@ -69,18 +76,24 @@ config accepts the following keys
 
 ## Todo
 
-1. When using onpage mode, we remove the element that is passed to chatyuk. Instead we should create a dummy element and append to it.
+1. Update documentation
+  1. Remove hardcoded domain names from both client and server configurations (we should be able to leave them empty)
+1. Chatyuk should expose an API to set a username and join a chatroom by default
+1. Notify user when there is a chat directed at her
+  1. Notify in title of window 
+  1. Look at using chrome notifications if available ?
+1. Session management issues
+  1. Instead of setting 3 cookies, only set 1 for session management
+  1. Session management is flaky at times, seen more then one chatyuk cookie for the same session
+  1. When rejoining rooms on reloadig a page, we loose all messages from the room. Maybe there is a way to get the prior messages ?
 1. Create a script that will run both jasmine and acceptance test headless so that we can run it on a CI
   - Running nightwatch headleass - https://github.com/beatfactor/nightwatch/wiki/Running-tests-in-PhantomJS
 1. Add source maps to help with debugging
-1. Add sample on how to embed chatyuk on existing page
 1. Improve default style 
   - Scrollbar in chat window is ugly
   - On Firefox when display_mode = 'inpage', the messagepane is not expanded
   - Removed unused CSS in chatyuk.css file
-1. Remove hardcoded domain names from both client and server configurations (we should be able to leave them empty)
 1. Websocket support
-1. When rejoining rooms on reloadig a page, we loose all messages from the room. Maybe there is a way to get the prior messages ?
 1. Figure out why converse.js dumped the muc plugin ?
   - https://github.com/jcbrand/converse.js/issues/307
 1. Implement sample server code to create a pre-bound session and integrate with comms.js

@@ -24,7 +24,14 @@ var Chatyuk = {
                this.config.chat_server, 
                this.config.conference_server);
 
-    this.renderComponent(parentEl);
+    var containerEl = this.createContainerEl(parentEl);
+    this.renderComponent(containerEl);
+  },
+
+  createContainerEl: function(parentEl) {
+    var containerEl = document.createElement('div');
+    parentEl.appendChild(containerEl);
+    return containerEl;
   },
 
   initConfig: function(customConfig) {

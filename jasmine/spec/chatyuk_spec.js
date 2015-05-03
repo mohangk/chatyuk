@@ -39,29 +39,36 @@ describe('Chatyuk',function() {
 
     var renderComponentSpy = null;
     var chatyuk = null;
+    var fakeParentEl = null;
 
     beforeEach(function() {
       chatyuk = Object.create(Chatyuk);
       renderComponentSpy = spyOn(chatyuk, 'renderComponent');
+      fakeParentEl = document.createElement('div');
     });
 
     it('initializes the comms object', function() {
       var initParams = {bosh_service_url: 'fake', chat_server: 'fake_server', conference_server: 'fake_conf_server'};
-      chatyuk.init('fakeParentEl', initParams);
+      chatyuk.init(fakeParentEl, initParams);
       expect(FakeComms.init).toHaveBeenCalledWith(initParams.bosh_service_url, initParams.chat_server, initParams.conference_server);
     });
 
     it('calls initConfig with the passed in config', function() {
       var initConfigSpy = spyOn(chatyuk, 'initConfig').and.callThrough();
       var configSpy = jasmine.createSpy();
-      chatyuk.init('fakeParentEl', configSpy);
+      chatyuk.init(fakeParentEl, configSpy);
       expect(initConfigSpy).toHaveBeenCalledWith(configSpy);
     });
 
-    it('calls renderComponent with the passed in parentEl', function() {
-      var parentElSpy = jasmine.createSpy();
-      chatyuk.init(parentElSpy, 'fakeConfig');
-      expect(renderComponentSpy).toHaveBeenCalledWith(parentElSpy);
+    it('creates a containerEl as a child to parentEl', function() {
+      chatyuk.init(fakeParentEl, 'fakeConfig');
+      expect(fakeParentEl.children.length).toEqual(1);
+    });
+
+    it('calls renderComponent with the created containerEl', function() {
+      var fakeParentEl = document.createElement('div');
+      chatyuk.init(fakeParentEl, 'fakeConfig');
+      expect(renderComponentSpy).toHaveBeenCalledWith(fakeParentEl.children.item(0));
     });
   });
 
