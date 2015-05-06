@@ -2,14 +2,13 @@ var proxyquire = require('proxyquireify')(require);
 
 var fakeCookies = {
   store: {},
-  setItem: function(k,v) { this.store[k] = v; },
-  getItem: function(k) { return this.store[k]; },
-  hasItem: function(k) { return this.store[k] !== undefined; },
-  removeItem: function(k) { delete this.store[k] }
+  set: function(k,v) { this.store[k] = v; },
+  get: function(k) { return this.store[k]; },
+  expire: function(k) { delete this.store[k] }
 };
 
 var stubs = {
-  '../utils/cookies.js': fakeCookies,
+  'cookies-js': fakeCookies,
 };
 
 var fakeSession = {
@@ -28,15 +27,15 @@ describe('SessionManager', function() {
   describe('#save', function() {
     it('stores the jid, sid, rid, username, room into cookie', function() {
 
-      cookieSpy = spyOn(fakeCookies,'setItem');
+      cookieSpy = spyOn(fakeCookies,'set');
       sessionManager.save(fakeSession);
 
       expect(cookieSpy.calls.allArgs()).toEqual(
         [
-          ['chatyuk_user', fakeSession.username, Infinity],
-          ['chatyuk_room', fakeSession.room, Infinity],
-          ['chatyuk_sid',  fakeSession.sid, Infinity],
-          ['chatyuk_rid',  fakeSession.rid, Infinity]
+          ['chatyuk_user', fakeSession.username],
+          ['chatyuk_room', fakeSession.room],
+          ['chatyuk_sid',  fakeSession.sid],
+          ['chatyuk_rid',  fakeSession.rid]
         ]);
     });
   });
@@ -44,10 +43,10 @@ describe('SessionManager', function() {
   describe('#clear', function(){
    
     beforeEach(function() {
-      fakeCookies.setItem('chatyuk_user', fakeSession.username),
-      fakeCookies.setItem('chatyuk_room', fakeSession.room),
-      fakeCookies.setItem('chatyuk_sid',  fakeSession.sid),
-      fakeCookies.setItem('chatyuk_rid',  fakeSession.rid)
+      fakeCookies.set('chatyuk_user', fakeSession.username),
+      fakeCookies.set('chatyuk_room', fakeSession.room),
+      fakeCookies.set('chatyuk_sid',  fakeSession.sid),
+      fakeCookies.set('chatyuk_rid',  fakeSession.rid)
     });
 
     it("remove prior session reference", function(){
@@ -55,10 +54,10 @@ describe('SessionManager', function() {
        expect(session.username).toBeDefined();
        sessionManager.clear();
        expect(sessionManager.retrieve()).toBeDefined();
-       expect(fakeCookies.getItem('chatyuk_user')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_room')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_sid')).toBeUndefined();
-       expect(fakeCookies.getItem('chatyuk_rid')).toBeUndefined();
+       expect(fakeCookies.get('chatyuk_user')).toBeUndefined();
+       expect(fakeCookies.get('chatyuk_room')).toBeUndefined();
+       expect(fakeCookies.get('chatyuk_sid')).toBeUndefined();
+       expect(fakeCookies.get('chatyuk_rid')).toBeUndefined();
      });
   });
 

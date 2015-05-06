@@ -1,35 +1,35 @@
-var docCookies = require('../utils/cookies.js');
+var docCookies = require('cookies-js');
 
 
 module.exports = {
 
   save: function(session) {
-    docCookies.setItem('chatyuk_user', session.username, Infinity);
-    docCookies.setItem('chatyuk_room', session.room, Infinity);
-    docCookies.setItem('chatyuk_sid', session.sid, Infinity);
-    docCookies.setItem('chatyuk_rid', session.rid, Infinity);
+    docCookies.set('chatyuk_user', session.username);
+    docCookies.set('chatyuk_room', session.room);
+    docCookies.set('chatyuk_sid', session.sid);
+    docCookies.set('chatyuk_rid', session.rid);
   },
 
   exists: function(){
-    return (docCookies.getItem('chatyuk_sid') && 
-      docCookies.hasItem('chatyuk_rid') && 
-      docCookies.hasItem('chatyuk_user') && 
-      docCookies.hasItem('chatyuk_room'));
+    return (docCookies.get('chatyuk_sid') && 
+      docCookies.get('chatyuk_rid') && 
+      docCookies.get('chatyuk_user') && 
+      docCookies.get('chatyuk_room'));
   },
 
   clear: function(){
-    docCookies.removeItem('chatyuk_sid'); 
-    docCookies.removeItem('chatyuk_rid'); 
-    docCookies.removeItem('chatyuk_user'); 
-    docCookies.removeItem('chatyuk_room'); 
+    docCookies.expire('chatyuk_sid'); 
+    docCookies.expire('chatyuk_rid'); 
+    docCookies.expire('chatyuk_user'); 
+    docCookies.expire('chatyuk_room'); 
   },
 
   retrieve: function() {
     return { 
-      sid: docCookies.getItem('chatyuk_sid'),
-      rid: parseInt(docCookies.getItem('chatyuk_rid')),
-      username: docCookies.getItem('chatyuk_user'),
-      room: docCookies.getItem('chatyuk_room')
+      sid: docCookies.get('chatyuk_sid'),
+      rid: parseInt(docCookies.get('chatyuk_rid')),
+      username: docCookies.get('chatyuk_user'),
+      room: docCookies.get('chatyuk_room')
     }
   }
 

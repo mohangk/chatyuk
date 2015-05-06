@@ -75,7 +75,16 @@ config accepts the following keys
   - on page - a floating window that can be minimised a-la FB chat that can be easily added to any page
 
 ## Todo
-
+1. If there is a presence conflict don't indicate that you have joined the room
+```
+RECV:  <body xmlns:stream='http://etherx.jabber.org/streams' xmlns='http://jabber.org/protocol/httpbind' sid='c8883034-41b2-439f-88f8-1fc41a418ebf'><presence xmlns='jabber:client' type='error' to='cb83dc9b-f3e1-4c36-b9dc-dbd15c174f8d@chatyuk.com/54e7a54b-22e2-4f6b-9add-c5d09c6ce52b' from='testroom@conference.chatyuk.com/test'><error type='cancel' code='409'><conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error><x xmlns='http://jabber.org/protocol/muc'/></presence></body>
+```
+1. Do a better job detecting when a response from the server is an error. Now we quietly fail.
+```
+"SENT: " "<body rid='358520323' xmlns='http://jabber.org/protocol/httpbind' sid='fcc2b84a-4824-4545-ab4f-e328a5308cc2'><message to='testroom@conference.chatyuk.com' from='90a3aae4-40e9-4cb5-b30b-800949f9bbff@chatyuk.com/20f3adff-591a-4ec4-a73b-61cf15b8552c' type='groupchat' id='1' xmlns='jabber:client'><body xmlns='jabber:client'>asdf</body><x xmlns='jabber:x:event'><composing/></x></message></body>" bundle.js:200:6
+"RECV: " "<body sid='fcc2b84a-4824-4545-ab4f-e328a5308cc2' xmlns:stream='http://etherx.jabber.org/streams' xmlns='http://jabber.org/protocol/httpbind'><message type='error' to='90a3aae4-40e9-4cb5-b30b-800949f9bbff@chatyuk.com/20f3adff-591a-4ec4-a73b-61cf15b8552c' from='testroom@conference.chatyuk.com' id='1' xmlns='jabber:client'><error type='cancel'><not-acceptable xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error></message></body>"
+```
+1. When error-ed (login more then once), logout should still work.
 1. Update documentation
   1. Remove hardcoded domain names from both client and server configurations (we should be able to leave them empty)
 1. Chatyuk should expose an API to set a username and join a chatroom by default

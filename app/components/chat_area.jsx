@@ -48,7 +48,6 @@ var ChatArea = React.createClass({
       console.log("logging out!!");
       this.props.comms.disconnect();
     }
-    this.setState({ loggedIn: false, username: null, room: null });
   },
 
   unloading: function() {
