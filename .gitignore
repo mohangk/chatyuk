@@ -1,19 +1,21 @@
-.vagrant
-.DS_Store
-.module-cache
-node_modules
-.bundle.js
+# Allow app to be linked in node_modules so that we can easily require it
+# https://github.com/substack/browserify-handbook#avoiding-
+node_modules/*
+!node_modules/app
 
 # Leave out compiled files
-
 public/scripts/.module-cache/
 public/scripts/components
 
 # Leave out compiled bundles
 bundle.js
+.bundle.js
 
 # from nightwatch
 tests/reports/*
 
-
+# other random stuff to be left out
 npm-debug.log
+.vagrant
+.DS_Store
+.module-cache
