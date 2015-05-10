@@ -1,12 +1,12 @@
 var proxyquire = require('proxyquireify')(require);
 
 var Strophe = require('./support/mock_strophe.js');
-var session = require('../../app/comms/session_manager.js');
+var session = require('app/comms/session_manager.js');
 
 var stubs = {
-  './deps/strophe.js': Strophe,
-  './deps/strophe.muc.js': {},
-  './comms/session_manager.js': session
+  'app/deps/strophe.js': Strophe,
+  'app/deps/strophe.muc.js': {},
+  'app/comms/session_manager.js': session
 };
 
 var Comms = proxyquire('../../app/comms.js', stubs);

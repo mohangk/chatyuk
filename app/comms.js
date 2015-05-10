@@ -1,8 +1,9 @@
 "use strict";
 
-var session = require('./comms/session_manager.js');
-var Strophe = require('./deps/strophe.js');
-              require('./deps/strophe.muc.js');
+var session = require('app/comms/session_manager.js');
+var Message = require('app/comms/message.js');
+var Strophe = require('app/deps/strophe.js');
+              require('app/deps/strophe.muc.js');
 
 module.exports =  {
 
@@ -119,15 +120,10 @@ module.exports =  {
 
   onMessage: function(message, room) {
     console.log("IN comms::onMessage - this.onMesage");
+    var msg = Object.create(Message);
+    msg.init(message);
 
-    var messageBody = message.getElementsByTagName('body')[0];
-    var body = messageBody.innerHTML;
-
-    var jid = message.getAttribute('from');
-    var resource = Strophe.getResourceFromJid(jid);
-    var sender = resource && Strophe.unescapeNode(resource) || '';
-
-    this.onMessageCb({ body: body, sender: sender });
+    this.onMessageCb({ body: msg.body(), sender: msg.sender() });
 
     console.log('IN comms::onMessage - return');
 
