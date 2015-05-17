@@ -11,10 +11,10 @@ module.exports = {
   },
 
   exists: function(){
-    return (docCookies.get('chatyuk_sid') && 
-      docCookies.get('chatyuk_rid') && 
-      docCookies.get('chatyuk_user') && 
-      docCookies.get('chatyuk_room'));
+    return (this.isSet('chatyuk_sid') && 
+      this.isSet('chatyuk_rid') && 
+      this.isSet('chatyuk_user') && 
+      this.isSet('chatyuk_room'));
   },
 
   clear: function(){
@@ -22,6 +22,12 @@ module.exports = {
     docCookies.expire('chatyuk_rid'); 
     docCookies.expire('chatyuk_user'); 
     docCookies.expire('chatyuk_room'); 
+  },
+
+  
+  isSet: function(key) {
+    val = docCookies.get(key);
+    return (val !== null && typeof(val) != 'undefined');
   },
 
   retrieve: function() {
